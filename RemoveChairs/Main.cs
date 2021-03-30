@@ -7,7 +7,7 @@ using UnityEngine;
 using VRC.SDKBase;
 using Boo.Lang;
 
-[assembly: MelonInfo(typeof(RemoveChairs.Main), "RemoveChairs", "1.33", "Nirvash")]
+[assembly: MelonInfo(typeof(RemoveChairs.Main), "RemoveChairs", "1.34", "Nirvash")]
 [assembly: MelonGame("VRChat", "VRChat")]
 
 
@@ -46,49 +46,9 @@ namespace RemoveChairs
                 objectsDisabled.Clear();
             }));
             toggleChairsMenu.AddSimpleButton("Close", () => toggleChairsMenu.Hide());
-
-
-            //MelonMod uiExpansionKit = MelonLoader.Main.Mods.Find(m => m.InfoAttribute.Name == "UI Expansion Kit");
-            //if (uiExpansionKit != null)
-            //{
-            //    uiExpansionKit.InfoAttribute.SystemType.Assembly.GetTypes().First(t => t.FullName == "UIExpansionKit.API.ExpansionKitApi").GetMethod("RegisterWaitConditionBeforeDecorating", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static).Invoke(null, new object[]
-            //    {
-            //        CreateQuickMenuButton()
-            //    });
-            //}
         }
 
-        //private IEnumerator CreateQuickMenuButton()
-        //{
-        //        while (QuickMenu.prop_QuickMenu_0 == null) yield return null;
-               
-        //        ExpansionKitApi.RegisterSimpleMenuButton(ExpandedMenu.WorldMenu, "Disable Active Chairs", new Action(() =>
-        //        {
-        //            int countChange = 0;
-        //            var objects = Resources.FindObjectsOfTypeAll<VRCStation>();
-        //            foreach (var item in objects)
-        //            {
-        //                if (item.gameObject.active) //Only disable active chairs
-        //                {
-        //                    countChange++;
-        //                    objectsDisabled.Add(item); 
-        //                    item.gameObject.SetActive(false); // item.gameObject finds the parent gameObject of the VRCStation 
-        //                }
-        //            }
-        //            MelonLogger.Log("Disabled " + countChange + " chair objects");
-        //        }));
-        //        ExpansionKitApi.RegisterSimpleMenuButton(ExpandedMenu.WorldMenu, "Re-enable Chairs", new Action(() =>
-        //        {
-        //            int countChange = 0;
-        //            foreach (var item in objectsDisabled)
-        //            {//The staff had an additional comment: I have a soft suspicion that re-enabling chairs may break if previously disabled chairs get deleted (like avatar chair or world jetpacks); some null checks should fix that
-        //                countChange++;
-        //                item.gameObject.SetActive(true);
-        //            }
-        //            MelonLogger.Log("Enabled " + countChange + " chair objects");
-        //            objectsDisabled.Clear();
-        //        }));
-        //}
+  
 
         List<VRCStation> objectsDisabled = new List<VRCStation>();
 

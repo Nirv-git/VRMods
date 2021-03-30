@@ -9,7 +9,7 @@ using UnityEngine.UI;
 using VRCSDK2;
 
 
-[assembly: MelonInfo(typeof(LocalCamera.Main), "LocalCameraMod", "1.0.0", "Nirvash")]
+[assembly: MelonInfo(typeof(LocalCamera.Main), "LocalCameraMod", "1.0.1", "Nirvash")]
 [assembly: MelonGame("VRChat", "VRChat")]
 
 namespace LocalCamera

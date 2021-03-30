@@ -3,7 +3,7 @@ using MelonLoader;
 using UnityEngine;
 
 
-[assembly: MelonModInfo(typeof(DisableControllerOverlay.DisableControllerOverlayMod), "DisableControllerOverlay", "0.9", "Nirvash")]
+[assembly: MelonModInfo(typeof(DisableControllerOverlay.DisableControllerOverlayMod), "DisableControllerOverlay", "0.9.1", "Nirvash")]
 [assembly: MelonModGame("VRChat", "VRChat")]
 
 namespace DisableControllerOverlay

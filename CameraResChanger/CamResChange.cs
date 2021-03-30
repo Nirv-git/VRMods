@@ -2,7 +2,7 @@
 using MelonLoader;
 using VRC.UserCamera;
 
-[assembly: MelonInfo(typeof(CameraResChanger.CamResChangerMod), "CameraResChanger", "1.33", "Nirvash")]
+[assembly: MelonInfo(typeof(CameraResChanger.CamResChangerMod), "CameraResChanger", "1.34", "Nirvash")]
 [assembly: MelonGame("VRChat", "VRChat")]
 
 namespace CameraResChanger
@@ -13,7 +13,9 @@ namespace CameraResChanger
 
         public override void OnApplicationStart()
         {
-            //if (MelonHandler.Mods.Find(m => m.Info.Name == "Lag Free Screenshots") != null) //Broke as od 1046-outputs black image
+            MelonPrefs.RegisterCategory("CamResChange", "Camera Res Changer");
+            //MelonPrefs.RegisterBool("CamResChange", "LargerSizes", true, "Enabled sizes larger than 8k (Requires 'Lag Free Screenshots' and may break in some VRC versions. Requires Restart)");
+            //if (MelonHandler.Mods.Find(m => m.Info.Name == "Lag Free Screenshots") != null && ModPrefs.GetBool("CamResChange", "LargerSizes")) //Broke as od 1046-outputs black image
             //{
             //    ExpansionKitApi.RegisterSimpleMenuButton(ExpandedMenu.CameraQuickMenu, "16k Res", () => ChangeCamRes(8640, 15360));
             //    ExpansionKitApi.RegisterSimpleMenuButton(ExpandedMenu.CameraQuickMenu, "14k Res", () => ChangeCamRes(7560, 13440)); //use *.875 of 16k
@@ -22,6 +24,7 @@ namespace CameraResChanger
             ExpansionKitApi.RegisterSimpleMenuButton(ExpandedMenu.CameraQuickMenu, "8k Res", () => ChangeCamRes(4320, 7680));
             ExpansionKitApi.RegisterSimpleMenuButton(ExpandedMenu.CameraQuickMenu, "6k Res", () => ChangeCamRes(3240, 5760));
             ExpansionKitApi.RegisterSimpleMenuButton(ExpandedMenu.CameraQuickMenu, "4k Res", () => ChangeCamRes(2160, 3840));
+            //ExpansionKitApi.RegisterSimpleMenuButton(ExpandedMenu.CameraQuickMenu, "2k Res", () => ChangeCamRes(1440, 2560));//Really 1080p is often considered 2k
             ExpansionKitApi.RegisterSimpleMenuButton(ExpandedMenu.CameraQuickMenu, "Default Res", () => ChangeCamRes(1080, 1920));
             MelonLogger.Log("Camera Res Changer Init");
         }
