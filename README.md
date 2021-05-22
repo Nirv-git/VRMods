@@ -77,6 +77,11 @@ This will stop your body from spinning while laying down in non FBT with SDK2 av
 
 In mod settings there are two preferences, where you can toggle having the "Immobilize" button on your quick menu, and delay it's load so it is the last button on the menu.
 
+# VRC-TeleportCameraToYou
+Another ultra simple mod, this puts a button on the UIX _Camera_ QuickMenu that teleports the Viewfinder of your camera right in front of your face. This is useful if you left it somewhere far away, or are using a small avatar. 
+
+In mod settings there is one preference, the distance from your head the camera gets teleported to. 
+
 # VRC-PlayerSpeedAdjSlower
 Did you ever want to move slower in game? This mod lets you do that! This is a very simple mod that uses [UIExpansionKit](https://github.com/knah/VRCMods/) to add three buttons to your settings menu. Default Speed, Half speed and 1/10 speed. 
 Honestly the main purpose for making this was use with very small avatars. 
