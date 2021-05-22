@@ -4,10 +4,10 @@ using UnityEngine;
 
 
 
-[assembly: MelonInfo(typeof(LocalCamera.Main), "TeleportCameraToYou", "1.0.1", "Nirvash")]
+[assembly: MelonInfo(typeof(TeleportCamera.Main), "TeleportCameraToYou", "1.0.1", "Nirvash")]
 [assembly: MelonGame("VRChat", "VRChat")]
 
-namespace LocalCamera
+namespace TeleportCamera
 {
     public class Main : MelonMod
     {
@@ -15,7 +15,7 @@ namespace LocalCamera
         public override void OnApplicationStart()
         {
             MelonPreferences.CreateCategory("TeleportCamToYou", "Teleport Camera To You");
-            MelonPreferences.CreateEntry("TeleportCamToYou", "Distance", 0.1f, "Distance from you");
+            MelonPreferences.CreateEntry("TeleportCamToYou", "Distance", 0.1f, "Distance from your head");
 
             ExpansionKitApi.GetExpandedMenu(ExpandedMenu.CameraQuickMenu).AddSimpleButton("Teleport Camera To You", () =>
             {
@@ -24,10 +24,8 @@ namespace LocalCamera
                 VRCPlayer player = VRCPlayer.field_Internal_Static_VRCPlayer_0;
                 Vector3 pos = GameObject.Find(player.gameObject.name + "/AnimationController/HeadAndHandIK/HeadEffector").transform.position + (player.transform.forward * MelonPreferences.GetEntryValue<float>("TeleportCamToYou", "Distance"));
                 vrcam.transform.position = pos;
-                
             });
         }
-
     }
 }
 
