@@ -13,6 +13,9 @@ Another simple mod that does just one thing! This uses [UIExpansionKit](https://
 
 Couple notes: 
 * Larger resolutions will cause your game to hang for a few seconds while it renders the image, I have not had VRC crash outright though, but in one instance an 8k photo took 30 seconds.   
+* Thanks to [Lag Free Screenshots](https://github.com/knah/VRCMods#lag-free-screenshots) I was silly and added a 16k option if that mod is also installed.
+  *  Note, make sure you have a good amount of RAM free. A friend of mine recently mentioned that he was having issues with this and I checked and a 16k photo spikes RAM usage by 6GB  
+  * __Resolutions greater than 8k may randomly break with new VRC versions__
 * This will not work with Virtual Lens, that camera has a lot of hard coded resolution values in it's shaders. Using anything but the default resolution will just result in a picture of you. **VRCLens** will work with the 4k option though (if you set the camera prefab to use it when you add it to your avatar)
 
 I would also recommend [CameraMinus](https://github.com/knah/VRCMods) for some other camera QoL. 
