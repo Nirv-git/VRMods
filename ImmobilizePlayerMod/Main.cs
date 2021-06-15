@@ -4,7 +4,7 @@ using UIExpansionKit.API;
 using UnityEngine;
 
 
-[assembly: MelonInfo(typeof(ImmobilizePlayer.Main), "ImmobilizePlayerMod", "0.3.1", "Nirvash")]
+[assembly: MelonInfo(typeof(ImmobilizePlayer.Main), "ImmobilizePlayerMod", "0.3.6", "Nirvash")]
 [assembly: MelonGame("VRChat", "VRChat")]
 
 namespace ImmobilizePlayer
@@ -21,8 +21,11 @@ namespace ImmobilizePlayer
         {
             RegisterModPrefs();
 
-            if (delayButton) MelonCoroutines.Start(SetupUI());
+            if (delayButton) MelonCoroutines.Start(SetupUI());//MelonCoroutines.Start(SetupUI());
             else AddToQM();
+
+            //ExpansionKitApi.RegisterWaitConditionBeforeDecorating(SetupUI());
+            ExpansionKitApi.OnUiManagerInit += UiManagerInit;
         }
 
         private void AddToQM()
@@ -47,7 +50,7 @@ namespace ImmobilizePlayer
             MelonPreferences.Save();
         }
 
-        public override void VRChat_OnUiManagerInit()
+        public void UiManagerInit()
         {
             MelonCoroutines.Start(ButtonState());
         }
