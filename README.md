@@ -78,7 +78,7 @@ This has been tested with Index controllers, but should work with others, probab
 An ultra simple mod, this puts a toggle on the UIX QuickMenu called "Immobilize" clicking will change the Immobilize value on your VRCPlayer to True or False. **Immobilize being True should have the same behavior as opening a big menu like Settings.** 
 This will stop your body from spinning while laying down in non FBT with SDK2 avatars, with SDK3 avatars Immobilize breaks the current animation and roots your feet to the ground from my experience. 
 
-In mod settings there are two preferences, where you can toggle having the "Immobilize" button on your quick menu, and delay it's load so it is the last button on the menu.
+In mod settings there are two preferences, where you can toggle having the "Immobilize" button on your quick menu, ~~and delay it's load so it is the last button on the menu.~~
 
 # VRC-TeleportCameraToYou
 Another ultra simple mod, this puts a button on the UIX _Camera_ QuickMenu that teleports the Viewfinder of your camera right in front of your face. This is useful if you left it somewhere far away, or are using a small avatar. 
