@@ -9,7 +9,7 @@ using UnityEngine.UI;
 using VRCSDK2;
 
 
-[assembly: MelonInfo(typeof(LocalCamera.Main), "LocalCameraMod", "1.0.1", "Nirvash")]
+[assembly: MelonInfo(typeof(LocalCamera.Main), "LocalCameraMod", "1.0.3", "Nirvash")]
 [assembly: MelonGame("VRChat", "VRChat")]
 
 namespace LocalCamera
@@ -30,20 +30,21 @@ namespace LocalCamera
             MelonPreferences.CreateCategory("LocalCamera", "LocalCamera");
             MelonPreferences.CreateEntry("LocalCamera", "CameraRes4k", false, "4k Camera Texture Res (1080p default)");
             MelonPreferences.CreateEntry("LocalCamera", "ParentToTracking", false, "Parent Camera to Tracking Space");
-            MelonPreferences.CreateEntry("LocalCamera", "DelayButton", false, "Put button last on the list (Req restart)");
+            //MelonPreferences.CreateEntry("LocalCamera", "DelayButton", false, "Put button last on the list (Req restart)");
 
-            if (ModPrefs.GetBool("LocalCamera", "DelayButton")) MelonCoroutines.Start(SetupUI());
-            else ExpansionKitApi.GetExpandedMenu(ExpandedMenu.QuickMenu).AddSimpleButton("Local Camera", () => ToggleCamMenu());
-        }
-
-        private IEnumerator SetupUI()//I want the button to be last on the list
-        {
-            while (QuickMenu.prop_QuickMenu_0 == null) yield return null;
-            yield return new WaitForSeconds(10f);
-            MelonLogger.Msg($"Adding QM button late and reloading the menu");
+            //if (MelonPreferences.GetEntryValue<bool>("LocalCamera", "DelayButton")) MelonCoroutines.Start(SetupUI()); //Dirty hack broke with ML 0.4.0
+            //else ExpansionKitApi.GetExpandedMenu(ExpandedMenu.QuickMenu).AddSimpleButton("Local Camera", () => ToggleCamMenu());
             ExpansionKitApi.GetExpandedMenu(ExpandedMenu.QuickMenu).AddSimpleButton("Local Camera", () => ToggleCamMenu());
-            MelonPreferences.Save();
         }
+
+        //private IEnumerator SetupUI()//I want the button to be last on the list
+        //{
+        //    while (QuickMenu.prop_QuickMenu_0 == null) yield return null;
+        //    yield return new WaitForSeconds(10f);
+        //    MelonLogger.Msg($"Adding QM button late and reloading the menu");
+        //    ExpansionKitApi.GetExpandedMenu(ExpandedMenu.QuickMenu).AddSimpleButton("Local Camera", () => ToggleCamMenu());
+        //    MelonPreferences.Save();
+        //}
 
         public void ToggleCamMenu()
         {
@@ -72,16 +73,16 @@ namespace LocalCamera
 
 
 
-        public override void OnModSettingsApplied()
+        public override void OnPreferencesSaved()
         {
-            if (_localCam != null && ModPrefs.GetBool("LocalCamera", "ParentToTracking") != parentToTracking)
+            if (_localCam != null && MelonPreferences.GetEntryValue<bool>("LocalCamera", "ParentToTracking") != parentToTracking)
             {
-                if (ModPrefs.GetBool("LocalCamera", "ParentToTracking")) _localCam.transform.SetParent(GameObject.Find("_Application/TrackingVolume/PlayerObjects").transform, true);
+                if (MelonPreferences.GetEntryValue<bool>("LocalCamera", "ParentToTracking")) _localCam.transform.SetParent(GameObject.Find("_Application/TrackingVolume/PlayerObjects").transform, true);
                 else _localCam.transform.SetParent(null);
             }
 
-            CameraRes4k = ModPrefs.GetBool("LocalCamera", "CameraRes4k");
-            parentToTracking = ModPrefs.GetBool("LocalCamera", "ParentToTracking");
+            CameraRes4k = MelonPreferences.GetEntryValue<bool>("LocalCamera", "CameraRes4k");
+            parentToTracking = MelonPreferences.GetEntryValue<bool>("LocalCamera", "ParentToTracking");
 
         }
 
@@ -184,10 +185,10 @@ namespace LocalCamera
         private void TrackingSpace()
         { //This feels messy
             if (_localCam is null) return;
-            ModPrefs.SetBool("LocalCamera", "ParentToTracking", !ModPrefs.GetBool("LocalCamera", "ParentToTracking"));
-            if (ModPrefs.GetBool("LocalCamera", "ParentToTracking")) _localCam.transform.SetParent(GameObject.Find("_Application/TrackingVolume/PlayerObjects").transform, true);
+            MelonPreferences.SetEntryValue<bool>("LocalCamera", "ParentToTracking", !MelonPreferences.GetEntryValue<bool>("LocalCamera", "ParentToTracking"));
+            if (MelonPreferences.GetEntryValue<bool>("LocalCamera", "ParentToTracking")) _localCam.transform.SetParent(GameObject.Find("_Application/TrackingVolume/PlayerObjects").transform, true);
             else _localCam.transform.SetParent(null);
-            parentToTracking = ModPrefs.GetBool("LocalCamera", "ParentToTracking");
+            parentToTracking = MelonPreferences.GetEntryValue<bool>("LocalCamera", "ParentToTracking");
 
             buttonList["trackingBut"].GetComponentInChildren<Text>().text = $"Toggle Tracking Space\n {(parentToTracking ? "-Following-" : "-Not Following-")} ";
         }
