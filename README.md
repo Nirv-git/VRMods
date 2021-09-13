@@ -85,6 +85,10 @@ Another ultra simple mod, this puts a button on the UIX _Camera_ QuickMenu that 
 
 In mod settings there is one preference, the distance from your head the camera gets teleported to. 
 
+# VRC-ToggleIKTAnim
+Did you like having a button you could pin to your QuickMenu to quickly toggle movement animations with IKTweaks? This ultra simple mod adds a toggle to your QM that forcefully sets the preference for IgnoreAnimationsMode betweek "None" and "All".    
+It is simple, dirty, but works! 
+
 # VRC-PlayerSpeedAdjSlower
 Did you ever want to move slower in game? This mod lets you do that! This is a very simple mod that uses [UIExpansionKit](https://github.com/knah/VRCMods/) to add three buttons to your settings menu. Default Speed, Half speed and 1/10 speed. 
 Honestly the main purpose for making this was use with very small avatars. 
