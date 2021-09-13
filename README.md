@@ -89,6 +89,13 @@ In mod settings there is one preference, the distance from your head the camera 
 Did you like having a button you could pin to your QuickMenu to quickly toggle movement animations with IKTweaks? This ultra simple mod adds a toggle to your QM that forcefully sets the preference for IgnoreAnimationsMode betweek "None" and "All".    
 It is simple, dirty, but works! 
 
+# VRC-LocalCube
+Did you ever just not want to see the rest of the world? This mod gives you that ability! Now you can spawn a cube around you that only you can see!   
+
+The silly inspiration for this mod was VRC reconnecting me to a world while I was sleeping, the sleep area is dark, but spawn is super bright. Obvious answer is to make a mod to make a black cube to hide the blinding light! 
+
+Also has been useful at times for just using a wall from the cube to hide certain parts of the map when they bug out. Don't need to worry about the seizure textures if you just hide them! 
+
 # VRC-PlayerSpeedAdjSlower
 Did you ever want to move slower in game? This mod lets you do that! This is a very simple mod that uses [UIExpansionKit](https://github.com/knah/VRCMods/) to add three buttons to your settings menu. Default Speed, Half speed and 1/10 speed. 
 Honestly the main purpose for making this was use with very small avatars. 
