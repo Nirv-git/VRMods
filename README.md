@@ -96,6 +96,17 @@ The silly inspiration for this mod was VRC reconnecting me to a world while I wa
 
 Also has been useful at times for just using a wall from the cube to hide certain parts of the map when they bug out. Don't need to worry about the seizure textures if you just hide them! 
 
+# VRC-MirrorLayers
+Requires [UIX](https://github.com/knah/VRCMods/releases/latest/download/UIExpansionKit.dll) for it's menus  
+  
+This mods allows you to edit the layers that mirrors reflect in VRChat
+You can: Set all Mirrors to Full/Optimized   
+Enable/Disable layers on all mirrors or a specific mirror using the "View Mirrors" button.  
+
+Includes the option to force setting a default layer mask to all mirrors on joining the world, accessible in the "Defaults Menu"
+  
+You can access these options using the "Edit Mirror Layers" buttons in the Worlds Big Menu, and Quick Menu. (Quick Menu button is disabled by default, you can enable it in Mod Settings)  
+
 # VRC-PlayerSpeedAdjSlower
 Did you ever want to move slower in game? This mod lets you do that! This is a very simple mod that uses [UIExpansionKit](https://github.com/knah/VRCMods/) to add three buttons to your settings menu. Default Speed, Half speed and 1/10 speed. 
 Honestly the main purpose for making this was use with very small avatars. 
