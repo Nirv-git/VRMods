@@ -36,10 +36,8 @@ There are now two preferences in Mod Settings,
 * Keyboard Shortcuts - Enables keyboard shortcuts to set your clipping plane to the smallest or largest values.  **[** for 0.001 and  **]** for 0.05
 * Smaller Default - Sets a smaller value on World Change - 0.001 vs 0.01   
 
-### **[--Latest Download--](https://github.com/Nirv-git/VRMods/releases/latest/download/NearClippingPlaneAdjuster.dll)** 
-
 # CameraResChanger
-Another simple mod that does just one thing! This uses [UIExpansionKit](https://github.com/knah/V.RCMods/) to add a few buttons to your camera menu, allowing you to set the VRC camera resolution to, Default (1920x1080), 4K (3840x2160), 6k (5760x3240), 8k (7680x4320).
+Another simple mod that does just one thing! This uses [UIExpansionKit](https://github.com/knah/VRCMods/) to add a few buttons to your camera menu, allowing you to set the VRC camera resolution to, Default (1920x1080), 4K (3840x2160), 6k (5760x3240), 8k (7680x4320).
 
 ![image](https://user-images.githubusercontent.com/4786654/86955451-370c8080-c11d-11ea-8038-4b39c7c10979.png)
 
@@ -52,14 +50,12 @@ Couple notes:
 
 I would also recommend [CameraMinus](https://github.com/knah/VRCMods) for some other camera QoL.    
 
-### **[--Latest Download--](https://github.com/Nirv-git/VRMods/releases/latest/download/CameraResChanger.dll)** 
 
 # RemoveChairs
 Very simple mod which adds a Toggle Chairs button to the Worlds menu that will locally toggle all active chairs in a world. Useful for when map makers put chairs in inconvenient locations and don't have a way to disable them.
 
 ![image](https://user-images.githubusercontent.com/68404726/107717998-86f68b80-6c9a-11eb-9d30-53189e873661.png)   
 
-### **[--Latest Download--](https://github.com/Nirv-git/VRMods/releases/latest/download/RemoveChairs_Mod.dll)** 
 
 # LocalCamera
 In the latest addition to look-at-yourself technology, this mod adds a pickable camera. This was made to replicate the functionality of turning the default camera around and pointing it at yourself, but to be local so others don't see the floating lens.
@@ -77,7 +73,6 @@ Features include:
   * Selfie Stick for moving the camera
   * Rotate to your Head - Turns the Camera to face you   
   
-### **[--Latest Download--](https://github.com/Nirv-git/VRMods/releases/latest/download/LocalCameraMod.dll)** 
   
 # DisableControllerOverlay
 A simple and limited functionality mod. This simply disables the white outlined controller tooltips you get when hovering over an interactable item when Tool tips are enabled. 
@@ -88,33 +83,27 @@ This has been tested with Index controllers, but should work with others, probab
 
 ![image](https://user-images.githubusercontent.com/68404726/107717602-a17c3500-6c99-11eb-8ae8-9f0fd4a42165.png)    
 
-### **[--Latest Download--](https://github.com/Nirv-git/VRMods/releases/latest/download/DisableControllerOverlayMod.dll)** 
 
 # DisableOneHandMovementUI
 A simple mod. This simply disables (actually scales to 0.0001) the one handed movement UI that shows when you have the ActionMenu open, or a controller off.     
-
-### **[--Latest Download--](https://github.com/Nirv-git/VRMods/releases/latest/download/DisableOneHandMovementUIMod.dll)** 
 
 # ImmobilizePlayerMod
 An ultra simple mod, this puts a toggle on the UIX QuickMenu called "Immobilize" clicking will change the Immobilize value on your VRCPlayer to True or False. **Immobilize being True should have the same behavior as opening a big menu like Settings.** 
 This will stop your body from spinning while laying down in non FBT with SDK2 avatars, with SDK3 avatars Immobilize breaks the current animation and roots your feet to the ground from my experience. 
 
 In mod settings there are two preferences, where you can toggle having the "Immobilize" button on your quick menu, ~~and delay it's load so it is the last button on the menu.~~     
-
-### **[--Latest Download--](https://github.com/Nirv-git/VRMods/releases/latest/download/ImmobilizePlayerMod.dll)** 
+ 
 
 # TeleportCameraToYou
 Another ultra simple mod, this puts a button on the UIX _Camera_ QuickMenu that teleports the Viewfinder of your camera right in front of your face. This is useful if you left it somewhere far away, or are using a small avatar. 
 
 In mod settings there is one preference, the distance from your head the camera gets teleported to.   
 
-### **[--Latest Download--](https://github.com/Nirv-git/VRMods/releases/latest/download/TeleportCameraToYou.dll)** 
 
 # ToggleIKTAnim
 Did you like having a button you could pin to your QuickMenu to quickly toggle movement animations with IKTweaks? This ultra simple mod adds a toggle to your QM that forcefully sets the preference for IgnoreAnimationsMode betweek "None" and "All".    
 It is simple, dirty, but works!    
 
-### **[--Latest Download--](https://github.com/Nirv-git/VRMods/releases/latest/download/ToggleIKTAnim.dll)** 
 
 # LocalCube
 Did you ever just not want to see the rest of the world? This mod gives you that ability! Now you can spawn a cube around you that only you can see!   
@@ -123,7 +112,6 @@ The silly inspiration for this mod was VRC reconnecting me to a world while I wa
 
 Also has been useful at times for just using a wall from the cube to hide certain parts of the map when they bug out. Don't need to worry about the seizure textures if you just hide them!    
 
-### **[--Latest Download--](https://github.com/Nirv-git/VRMods/releases/latest/download/LocalCube.dll)** 
 
 # MirrorLayers
 Requires [UIX](https://github.com/knah/VRCMods/releases/latest/download/UIExpansionKit.dll) for it's menus  
@@ -134,8 +122,7 @@ Enable/Disable layers on all mirrors or a specific mirror using the "View Mirror
 
 Includes the option to force setting a default layer mask to all mirrors on joining the world, accessible in the "Defaults Menu"
   
-You can access these options using the "Edit Mirror Layers" buttons in the Worlds Big Menu, and Quick Menu. (Quick Menu button is disabled by default, you can enable it in Mod Settings)  
-### **[--Latest Download--](https://github.com/Nirv-git/VRMods/releases/latest/download/MirrorLayers.dll)** 
+You can access these options using the "Edit Mirror Layers" buttons in the Worlds Big Menu, and Quick Menu. (Quick Menu button is disabled by default, you can enable it in Mod Settings)   
 
 # PlayerSpeedAdjSlower
 Did you ever want to move slower in game? This mod lets you do that! This is a very simple mod that uses [UIExpansionKit](https://github.com/knah/VRCMods/) to add three buttons to your settings menu. Default Speed, Half speed and 1/10 speed. 
@@ -146,6 +133,3 @@ Honestly the main purpose for making this was use with very small avatars.
 Count it as either a bug or a feature, but this does not affect the strafe speed, so you still can move side to side at full speed. 
 
 After pressing the button it will set the speed every 30 seconds for 5 minutes, to allow you to switch avatars and keep the set speed.    
-
-
-### **[--Latest Download--](https://github.com/Nirv-git/VRMods/releases/latest/download/PlayerSpeedAdjustSlower.dll)** 
