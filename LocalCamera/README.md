@@ -3,7 +3,7 @@
 **This was made in my free time, and is provided AS IS without warranty of any kind, express or implied. Any use is at your own risk and you accept all responsibility**
 
 
-# VRC-LocalCamera
+# LocalCamera
 In the latest addition to look-at-yourself technology, this mod adds a pickable camera. This was made to replicate the functionality of turning the default camera around and pointing it at yourself, but to be local so others don't see the floating lens.
 
 You should find a button on your UIX Quick Menu called 'Local Camera'

@@ -7,7 +7,7 @@ They all require [Melon Loader](https://melonwiki.xyz/#/README?id=installation-o
 **This was made in my free time, and is provided AS IS without warranty of any kind, express or implied. Any use is at your own risk and you accept all responsibility**
 
 
-# VRC-CameraResChanger
+# CameraResChanger
 Another simple mod that does just one thing! This uses [UIExpansionKit](https://github.com/knah/VCRCMods/) to add a few buttons to your camera menu, allowing you to set the VRC camera resolution to, Default (1920x1080), 4K (3840x2160), 6k (5760x3240), 8k (7680x4320).
 ![image](https://user-images.githubusercontent.com/4786654/86955451-370c8080-c11d-11ea-8038-4b39c7c10979.png)
 

@@ -3,7 +3,7 @@
 **This was made in my free time, and is provided AS IS without warranty of any kind, express or implied. Any use is at your own risk and you accept all responsibility**
 
 
-# VRC-MirrorLayers
+# MirrorLayers
 Requires [UIX](https://github.com/knah/VRCMods/releases/latest/download/UIExpansionKit.dll) for it's menus  
   
 This mods allows you to edit the layers that mirrors reflect in VRChat

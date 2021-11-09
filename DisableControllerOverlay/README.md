@@ -3,7 +3,7 @@
 **This was made in my free time, and is provided AS IS without warranty of any kind, express or implied. Any use is at your own risk and you accept all responsibility**
 
 
-# VRC-DisableControllerOverlay
+# DisableControllerOverlay
 A simple and limited functionality mod. This simply disables the white outlined controller tooltips you get when hovering over an interactable item when Tool tips are enabled. 
 
 Why make this? Because randomly that outline gets stuck on and the only way in the past to get rid of it was to restart the game, now I can just click a button. 

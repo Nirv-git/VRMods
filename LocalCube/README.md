@@ -3,7 +3,7 @@
 **This was made in my free time, and is provided AS IS without warranty of any kind, express or implied. Any use is at your own risk and you accept all responsibility**
 
 
-# VRC-LocalCube
+# LocalCube
 Did you ever just not want to see the rest of the world? This mod gives you that ability! Now you can spawn a cube around you that only you can see!   
 
 The silly inspiration for this mod was VRC reconnecting me to a world while I was sleeping, the sleep area is dark, but spawn is super bright. Obvious answer is to make a mod to make a black cube to hide the blinding light! 

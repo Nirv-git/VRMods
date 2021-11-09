@@ -6,7 +6,7 @@ They all require [Melon Loader](https://melonwiki.xyz/#/README?id=installation-o
 **This was made in my free time, and is provided AS IS without warranty of any kind, express or implied. Any use is at your own risk and you accept all responsibility**
 
 
-# VRC-NearClippingPlaneAdjuster
+# NearClippingPlaneAdjuster
 This is a mod for adjusting the near clipping plane for the player's camera. This can allow you to get much closer to objects before they start clipping and be used for seeing your limbs with a VERY small avatar. 
 
 Note: This mod will not fix your menu breaking at small avatar sizes. However, the keyboard shortcut 'Ctrl + \\' works for setting you to the default avatar size. 

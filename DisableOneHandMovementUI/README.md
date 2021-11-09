@@ -3,7 +3,6 @@
 **This was made in my free time, and is provided AS IS without warranty of any kind, express or implied. Any use is at your own risk and you accept all responsibility**
 
 
-# ToggleIKTAnim
-Did you like having a button you could pin to your QuickMenu to quickly toggle movement animations with IKTweaks? This ultra simple mod adds a toggle to your QM that forcefully sets the preference for IgnoreAnimationsMode betweek "None" and "All".    
-It is simple, dirty, but works! 
+# DisableOneHandMovementUI
+A simple mod. This simply disables (actually scales to 0.0001) the one handed movement UI that shows when you have the ActionMenu open, or a controller off.
 

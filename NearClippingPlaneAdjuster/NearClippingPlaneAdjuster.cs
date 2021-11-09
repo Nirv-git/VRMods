@@ -5,8 +5,9 @@ using VRC.UserCamera;
 using ConsoleColor = System.ConsoleColor;
 using UnhollowerRuntimeLib;
 using NearClipPlaneAdj.Components;
+using System.Collections;
 
-[assembly: MelonInfo(typeof(NearClipPlaneAdj.NearClipPlaneAdjMod), "NearClipPlaneAdj", "1.38", "Nirvash")]
+[assembly: MelonInfo(typeof(NearClipPlaneAdj.NearClipPlaneAdjMod), "NearClipPlaneAdj", "1.41", "Nirvash")]
 [assembly: MelonGame("VRChat", "VRChat")]
 
 namespace NearClipPlaneAdj
@@ -34,7 +35,7 @@ namespace NearClipPlaneAdj
 
             MelonLogger.Msg("Registering components...");
             ClassInjector.RegisterTypeInIl2Cpp<EnableDisableListener>();
-            ExpansionKitApi.OnUiManagerInit += UiManagerInit;
+            MelonCoroutines.Start(OnLoad());
         }
 
         public override void OnPreferencesSaved()
@@ -44,12 +45,15 @@ namespace NearClipPlaneAdj
             raiseNearClip = MelonPreferences.GetEntryValue<bool>("NearClipAdj", "SmallerDefault");
         }
 
-        public void UiManagerInit()
+        public IEnumerator OnLoad()
         {
-            MelonLogger.Msg("Adding QM listener..."); //From https://github.com/tetra-fox/QMFreeze/blob/master/QMFreeze/Mod.cs
+            MelonLogger.Msg("Adding QM listener...."); //From https://github.com/tetra-fox/QMFreeze/blob/master/QMFreeze/Mod.cs
+            string micPath = "/UserInterface/Canvas_QuickMenu(Clone)/Container/Window/MicButton";
+            while (GameObject.Find(micPath) == null)
+                yield return new WaitForSeconds(1f);
             // MicControls is enabled no matter the QM page that's open, so let's use that to determine whether or not the QM is open
             // Unless you have some other mod that removes this button then idk lol
-            EnableDisableListener listener = GameObject.Find("/UserInterface/QuickMenu/MicControls").AddComponent<EnableDisableListener>();
+            EnableDisableListener listener = GameObject.Find(micPath).AddComponent<EnableDisableListener>();
             listener.OnEnabled += delegate { QMopen(); };
             listener.OnDisabled += delegate { QMclosed(); };
 
