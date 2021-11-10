@@ -124,6 +124,16 @@ Includes the option to force setting a default layer mask to all mirrors on join
   
 You can access these options using the "Edit Mirror Layers" buttons in the Worlds Big Menu, and Quick Menu. (Quick Menu button is disabled by default, you can enable it in Mod Settings)   
 
+# LocalHeadLightMod
+Requires [VRCUK](https://github.com/loukylor/VRC-Mods/releases)  
+  
+This mod adds a standalone headlight to your player. Included are options to swap between a Spot/Point light source and adjust the brightness, angle, range and color. 
+
+You can open the HeadLight Menu by clicking the Flashlight on the 'Here' Quick Meun page.
+
+![image](https://user-images.githubusercontent.com/81605232/141174136-df77461f-ad73-4d92-9f54-b88f69b58664.png)
+
+
 # PlayerSpeedAdjSlower
 Did you ever want to move slower in game? This mod lets you do that! This is a very simple mod that uses [UIExpansionKit](https://github.com/knah/VRCMods/) to add three buttons to your settings menu. Default Speed, Half speed and 1/10 speed. 
 Honestly the main purpose for making this was use with very small avatars. 
