@@ -48,7 +48,7 @@ namespace NearClipPlaneAdj
         public IEnumerator OnLoad()
         {
             MelonLogger.Msg("Adding QM listener...."); //From https://github.com/tetra-fox/QMFreeze/blob/master/QMFreeze/Mod.cs
-            string micPath = "/UserInterface/Canvas_QuickMenu(Clone)/Container/Window/MicButton";
+            //string micPath = "/UserInterface/Canvas_QuickMenu(Clone)/Container/Window/MicButton";
             //while (GameObject.Find(micPath) == null)
             while (GameObject.Find("/UserInterface")?.transform.Find("Canvas_QuickMenu(Clone)/Container/Window/MicButton") == null)
                 yield return new WaitForSeconds(1f);
