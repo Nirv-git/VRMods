@@ -133,6 +133,8 @@ You can open the HeadLight Menu by clicking the Flashlight on the 'Here' Quick M
 
 ![image](https://user-images.githubusercontent.com/81605232/141174136-df77461f-ad73-4d92-9f54-b88f69b58664.png)
 
+# DisableQMSafeMode
+Ultra simple, just disables the Safe Mode button on the Quick Menu on game load.
 
 # PlayerSpeedAdjSlower
 Did you ever want to move slower in game? This mod lets you do that! This is a very simple mod that uses [UIExpansionKit](https://github.com/knah/VRCMods/) to add three buttons to your settings menu. Default Speed, Half speed and 1/10 speed. 
