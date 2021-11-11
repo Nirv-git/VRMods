@@ -7,7 +7,7 @@ using UnhollowerRuntimeLib;
 using NearClipPlaneAdj.Components;
 using System.Collections;
 
-[assembly: MelonInfo(typeof(NearClipPlaneAdj.NearClipPlaneAdjMod), "NearClipPlaneAdj", "1.41", "Nirvash")]
+[assembly: MelonInfo(typeof(NearClipPlaneAdj.NearClipPlaneAdjMod), "NearClipPlaneAdj", "1.43", "Nirvash")]
 [assembly: MelonGame("VRChat", "VRChat")]
 
 namespace NearClipPlaneAdj
@@ -49,15 +49,17 @@ namespace NearClipPlaneAdj
         {
             MelonLogger.Msg("Adding QM listener...."); //From https://github.com/tetra-fox/QMFreeze/blob/master/QMFreeze/Mod.cs
             string micPath = "/UserInterface/Canvas_QuickMenu(Clone)/Container/Window/MicButton";
-            while (GameObject.Find(micPath) == null)
+            //while (GameObject.Find(micPath) == null)
+            while (GameObject.Find("/UserInterface")?.transform.Find("Canvas_QuickMenu(Clone)/Container/Window/MicButton") == null)
                 yield return new WaitForSeconds(1f);
             // MicControls is enabled no matter the QM page that's open, so let's use that to determine whether or not the QM is open
             // Unless you have some other mod that removes this button then idk lol
-            EnableDisableListener listener = GameObject.Find(micPath).AddComponent<EnableDisableListener>();
+            EnableDisableListener listener = GameObject.Find("/UserInterface")?.transform.Find("Canvas_QuickMenu(Clone)/Container/Window/MicButton").gameObject
+                .AddComponent<EnableDisableListener>();
             listener.OnEnabled += delegate { QMopen(); };
             listener.OnDisabled += delegate { QMclosed(); };
 
-            MelonLogger.Msg("Initialized!");
+            MelonLogger.Msg("Initialized QM listener!");
         }
 
         public void QMopen()
