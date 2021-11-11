@@ -8,7 +8,7 @@ using System.Reflection;
 using UnhollowerRuntimeLib;
 using System.IO;
 
-[assembly: MelonInfo(typeof(LocalHeadLightMod.Main), "LocalHeadLightMod", "0.6", "Nirvash")]
+[assembly: MelonInfo(typeof(LocalHeadLightMod.Main), "LocalHeadLightMod", "0.6.2", "Nirvash")]
 [assembly: MelonGame("VRChat", "VRChat")]
 
 namespace LocalHeadLightMod
@@ -24,9 +24,16 @@ namespace LocalHeadLightMod
             static public float lightIntensity = 1;
         }
         public static Light baseObj;
+        private static Transform uiButton;
+        private const string catagory = "HeadLight Settings";
+        public static MelonPreferences_Entry<float> buttX;
+        public static MelonPreferences_Entry<float> buttY;
 
         public override void OnApplicationStart()
         {
+            buttX = MelonPreferences.CreateEntry(catagory, nameof(buttX), 200f, "X position of button");
+            buttY = MelonPreferences.CreateEntry(catagory, nameof(buttY), -60f, "Y position of button");
+
             loadAssets();
             VRCUtils.OnUiManagerInit += Init;
         }
@@ -138,14 +145,23 @@ namespace LocalHeadLightMod
                 });
                 newButt.name = "HeadLight_UI";
                 newButt.SetParent(UiManager.QMStateController.transform.Find("Container/Window/QMParent/Menu_Here/QMHeader_H1"));
-                newButt.localPosition = new Vector3(200f, -60f, 0f);
+                newButt.localPosition = new Vector3(buttX.Value, buttY.Value, 0f); //200f, -60f
                 newButt.GetComponent<Button>().onClick = new Button.ButtonClickedEvent();
                 newButt.GetComponent<Button>().onClick.AddListener(butAction);
                 newButt.GetComponent<VRC.UI.Elements.Tooltips.UiTooltip>().field_Public_String_0 = "HeadLight";
                 newButt.GetComponentInChildren<Image>().overrideSprite = flashLight;
+                uiButton = newButt;
+                buttX.OnValueChanged += OnPositionChange;
+                buttY.OnValueChanged += OnPositionChange;
             }
             catch (System.Exception ex) { MelonLogger.Error("LocalHeadLightMoid Init: " + ex.ToString()); }
 
+        }
+
+        private static void OnPositionChange(float oldValue, float newValue)
+        {
+            if (oldValue == newValue) return;
+            uiButton.gameObject.transform.localPosition = new Vector3(buttX.Value, buttY.Value);
         }
 
         public static void ToggleLight(bool state)
