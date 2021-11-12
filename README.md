@@ -5,11 +5,12 @@ They all require [Melon Loader](https://melonwiki.xyz/#/README?id=installation-o
 
 **This was made in my free time, and is provided AS IS without warranty of any kind, express or implied. Any use is at your own risk and you accept all responsibility**
 
-# Mods not currently published on VRCMG 
+# Mods not currently published on VRCMG:
 * DisableOneHandMovementUI
-* ToggleIKTAnim
+* DisableQMSafeMode
 * LocalCube
 * MirrorLayers
+* ToggleIKTAnim
 * PlayerSpeedAdjSlower
 
 # NearClippingPlaneAdjuster
@@ -132,6 +133,15 @@ This mod adds a standalone headlight to your player. Included are options to swa
 You can open the HeadLight Menu by clicking the Flashlight on the 'Here' Quick Menu page.
 
 ![image](https://user-images.githubusercontent.com/81605232/141174136-df77461f-ad73-4d92-9f54-b88f69b58664.png)
+
+# HideCameraIndicatorsMod
+Do you hate seeing cameras in front of people's faces staring at them? Does the camera indicator block your view? Well this is the mod for you! 
+This mods has preferences for 
+ * Hiding the Camera Indicator or shrinking it to 1/4 size
+ * Hiding the nameplate over the camera
+By default this adds a button to the UIX Quick Menu for changing the settings, this can be disabled in Mod Settings. 
+
+You can always still see the red indicator when your menu is open
 
 # DisableQMSafeMode
 Ultra simple, just disables the Safe Mode button on the Quick Menu on game load.
