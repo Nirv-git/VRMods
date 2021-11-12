@@ -8,6 +8,6 @@ Do you hate seeing cameras in front of people's faces staring at them? Does the 
 This mods has preferences for 
  * Hiding the Camera Indicator or shrinking it to 1/4 size
  * Hiding the nameplate over the camera
-By default this adds a button to the UIX Quick Menu for changing the settings, this can be disabled in Mod Settings. 
+By default this adds a button to the UIX 'Camera' Quick Menu for changing the settings, this can be disabled in Mod Settings. 
 
 You can always still see the red indicator when your menu is open
