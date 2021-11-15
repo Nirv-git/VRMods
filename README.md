@@ -146,6 +146,12 @@ You can always still see the red indicator when your menu is open
 # DisableQMSafeMode
 Ultra simple, just disables the Safe Mode button on the Quick Menu on game load.
 
+# LocalLightMod
+Have you ever thought "This world's lighting sucks" or "It's too dark" well I have the solution for you! This mod lets you configure and spawn local (Spot|Point|Directional) light sources and provides functionality for saving and loading presets. 
+You can access this mod's features with the 'Light Menu' button on the UIX QuickMenu
+
+![image](https://user-images.githubusercontent.com/81605232/141375999-974173df-b6ca-4b5c-9350-88589d3e8106.png)
+
 # PlayerSpeedAdjSlower
 Did you ever want to move slower in game? This mod lets you do that! This is a very simple mod that uses [UIExpansionKit](https://github.com/knah/VRCMods/) to add three buttons to your settings menu. Default Speed, Half speed and 1/10 speed. 
 Honestly the main purpose for making this was use with very small avatars. 
