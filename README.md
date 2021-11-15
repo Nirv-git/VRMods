@@ -146,6 +146,12 @@ You can always still see the red indicator when your menu is open
 # DisableQMSafeMode
 Ultra simple, just disables the Safe Mode button on the Quick Menu on game load.
 
+# CameraFlashMod
+Did you ever wish your camera had a flash? This mod adds a toggable light to your camera in game. You can adjust the light settings with the 'Camera Flash Settings' on your UIX Camera Menu.
+
+![image](https://user-images.githubusercontent.com/81605232/141862668-f0fa6f0a-eb38-49b9-8e21-85460671f6d9.png)
+
+
 # LocalLightMod
 Have you ever thought "This world's lighting sucks" or "It's too dark" well I have the solution for you! This mod lets you configure and spawn local (Spot|Point|Directional) light sources and provides functionality for saving and loading presets. 
 You can access this mod's features with the 'Light Menu' button on the UIX QuickMenu
