@@ -91,7 +91,7 @@ namespace HideCameraIndicators
 
         public static void OnPlayerLeft(Player player)
         {
-            var username = player?._vrcplayer?.prop_String_1;
+            var username = player.field_Private_APIUser_0.displayName;
             //MelonLogger.Msg($"Player left: {username}");
             if (username != null && camList.ContainsKey(username))
                 camList.Remove(username);
@@ -115,6 +115,7 @@ namespace HideCameraIndicators
         {
             try
             {
+                //MelonLogger.Msg($"Processing: {username}");
                 if (camList.TryGetValue(username, out GameObject camObj))
                 {
                     if (camObj?.Equals(null) ?? true)
@@ -139,7 +140,6 @@ namespace HideCameraIndicators
                     camObj.transform.Find("Indicator/RemoteShape/Camera_Lens/UserCamera_Lens_New").GetComponent<MeshRenderer>().sharedMaterial.color = recolorCams.Value ? camColor.Value : new Color(.8f, .8f, .8f);
                     camObj.transform.Find("Indicator/RemoteShape/Camera_Lens/UserCamera_Lens_New").GetComponent<MeshRenderer>().sharedMaterial.SetFloat("_GlossMapScale", noGloss.Value ? 0f : 1f);
                 }
-                //MelonLogger.Msg($"Processed: {username}");
             }
             catch (System.Exception ex) { MelonLogger.Error($"ToggleCam:\n" + ex.ToString()); }
         }
