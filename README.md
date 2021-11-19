@@ -7,6 +7,7 @@ They all require [Melon Loader](https://melonwiki.xyz/#/README?id=installation-o
 
 # Mods not currently published on VRCMG:
 * DisableOneHandMovementUI
+* DisableControllerOverlay
 * DisableQMSafeMode
 * LocalCube
 * MirrorLayers

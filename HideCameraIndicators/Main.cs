@@ -7,7 +7,7 @@ using VRC.Core;
 using UIExpansionKit.API;
 using VRChatUtilityKit.Utilities;
 
-[assembly: MelonModInfo(typeof(HideCameraIndicators.HideCameraIndicatorsMod), "HideCameraIndicatorsMod", "0.2", "Nirvash")]
+[assembly: MelonModInfo(typeof(HideCameraIndicators.HideCameraIndicatorsMod), "HideCameraIndicatorsMod", "0.3", "Nirvash")]
 [assembly: MelonModGame("VRChat", "VRChat")]
 [assembly: MelonColor(ConsoleColor.Yellow)]
 
@@ -28,6 +28,7 @@ namespace HideCameraIndicators
         public static MelonPreferences_Entry<bool> recolorCams;
         public static MelonPreferences_Entry<bool> hideCamTex;
         public static MelonPreferences_Entry<Color> camColor;
+        public static MelonPreferences_Entry<bool> noGloss;
 
 
         public override void OnApplicationStart()
@@ -36,12 +37,14 @@ namespace HideCameraIndicators
             shrinkCams = MelonPreferences.CreateEntry(catagory, nameof(shrinkCams), false, "Shrink Indicators to .25x, Do not hide entirely");
             hideNameplate = MelonPreferences.CreateEntry(catagory, nameof(hideNameplate), false, "Hide Camera Nameplates");
 
-            noUIXButt = MelonPreferences.CreateEntry(catagory, nameof(noUIXButt), true, "UIX Button in 'Camera' Quick Menu");
             hideCamTex = MelonPreferences.CreateEntry(catagory, nameof(hideCamTex), false, "Hide Camera Texture");
             recolorCams = MelonPreferences.CreateEntry(catagory, nameof(recolorCams), false, "Recolor Cameras");
+            noGloss = MelonPreferences.CreateEntry(catagory, nameof(noGloss), false, "Less glossiness on Cameras");
+
+            noUIXButt = MelonPreferences.CreateEntry(catagory, nameof(noUIXButt), true, "UIX Button in 'Camera' Quick Menu");
 
             camColor = MelonPreferences.CreateEntry(catagory, nameof(camColor), Color.black, "", "", true);
-            colorList["Red"] = camColor.Value.r; colorList["Green"] = camColor.Value.g; colorList["Blue"] = camColor.Value.b;
+            colorList["Red"] = camColor.Value.r*100; colorList["Green"] = camColor.Value.g*100; colorList["Blue"] = camColor.Value.b*100;
 
 
             hideCams.OnValueChanged += UpdateAll;
@@ -49,6 +52,7 @@ namespace HideCameraIndicators
             hideNameplate.OnValueChanged += UpdateAll;
             recolorCams.OnValueChanged += UpdateAll;
             hideCamTex.OnValueChanged += UpdateAll;
+            noGloss.OnValueChanged += UpdateAll;
 
             NetworkEvents.OnAvatarInstantiated += OnAvatarInstantiated;
             NetworkEvents.OnPlayerLeft += OnPlayerLeft;
@@ -69,7 +73,7 @@ namespace HideCameraIndicators
         {
             var avatarObj = player?.prop_GameObject_0;
             var cam = avatarObj?.transform?.root?.Find("UserCameraIndicator")?.gameObject;
-            var username = avatarObj?.transform?.root?.GetComponentInChildren<VRCPlayer>()?.prop_String_1;
+            var username = avatarObj?.transform?.root?.GetComponentInChildren<VRC.Player>()?.field_Private_APIUser_0.displayName;
             if(avatarObj is null || cam is null || username is null)
             {
                 MelonLogger.Msg($"avatarObj is null: {avatarObj is null}, cam is null: {cam is null}, username is null: {username is null}");
@@ -127,23 +131,11 @@ namespace HideCameraIndicators
                     else 
                         camObj.transform.Find("Indicator/RemoteShape/Camera_Lens").localScale = new Vector3(.2f, .2f, .2f);
 
-                    if (hideCamTex.Value)
-                    {
-                        camObj.transform.Find("Indicator/RemoteShape/Camera_Lens/UserCamera_Lens_New").GetComponent<MeshRenderer>().material.mainTextureScale = new Vector2(.1f, .1f);
-                        camObj.transform.Find("Indicator/RemoteShape/Camera_Lens/UserCamera_Lens_New").GetComponent<MeshRenderer>().material.mainTextureOffset = new Vector2(.2f, .3f);
-                    }
-                    else
-                    {
-                        camObj.transform.Find("Indicator/RemoteShape/Camera_Lens/UserCamera_Lens_New").GetComponent<MeshRenderer>().material.mainTextureScale = new Vector2(1, 1);
-                        camObj.transform.Find("Indicator/RemoteShape/Camera_Lens/UserCamera_Lens_New").GetComponent<MeshRenderer>().material.mainTextureOffset = new Vector2(0f, 0f);
+                    camObj.transform.Find("Indicator/RemoteShape/Camera_Lens/UserCamera_Lens_New").GetComponent<MeshRenderer>().material.mainTextureScale = hideCamTex.Value ? new Vector2(.1f, .1f) : new Vector2(1, 1);
+                    camObj.transform.Find("Indicator/RemoteShape/Camera_Lens/UserCamera_Lens_New").GetComponent<MeshRenderer>().material.mainTextureOffset = hideCamTex.Value ? new Vector2(.2f, .3f) : new Vector2(0f, 0f);
 
-                    }
-
-                    if (recolorCams.Value)
-                        camObj.transform.Find("Indicator/RemoteShape/Camera_Lens/UserCamera_Lens_New").GetComponent<MeshRenderer>().material.color = camColor.Value;
-                    else
-                        camObj.transform.Find("Indicator/RemoteShape/Camera_Lens/UserCamera_Lens_New").GetComponent<MeshRenderer>().material.color = new Color(.8f, .8f, .8f);
-
+                    camObj.transform.Find("Indicator/RemoteShape/Camera_Lens/UserCamera_Lens_New").GetComponent<MeshRenderer>().material.color = recolorCams.Value ? camColor.Value : new Color(.8f, .8f, .8f);
+                    camObj.transform.Find("Indicator/RemoteShape/Camera_Lens/UserCamera_Lens_New").GetComponent<MeshRenderer>().material.SetFloat("_GlossMapScale", noGloss.Value ? 0f : 1f);
                 }
                 //MelonLogger.Msg($"Processed: {username}");
             }
@@ -158,18 +150,21 @@ namespace HideCameraIndicators
             menu.AddToggleButton("Shrink Indicators, do not hide entirely", (action) => shrinkCams.Value = !shrinkCams.Value, () => shrinkCams.Value);
 
             menu.AddToggleButton("Hide Camera Texture", (action) => hideCamTex.Value = !hideCamTex.Value, () => hideCamTex.Value);
+            menu.AddToggleButton("Less glossiness on Cameras", (action) => noGloss.Value = !noGloss.Value, () => noGloss.Value);
             menu.AddToggleButton("Recolor Cameras", (action) => recolorCams.Value = !recolorCams.Value, () => recolorCams.Value);
-            menu.AddSimpleButton($"Color (R,G,B):\n{camColor.Value.r * 100}, {camColor.Value.g * 100}, {camColor.Value.b * 100}", () => ColorMenuAdj());
-            menu.AddSpacer();
+            
             menu.AddSimpleButton($"Close", () =>
             {
                 menu.Hide();
             });
+            menu.AddSpacer();
+            menu.AddSimpleButton($"Color (R,G,B):\n{camColor.Value.r * 100}, {camColor.Value.g * 100}, {camColor.Value.b * 100}", () => ColorMenuAdj());
+     
             menu.Show();
         }
 
         private static Dictionary<string, float> colorList = new Dictionary<string, float> {
-                { "Red", 100 }, { "Green", 100 }, { "Blue", 100 }, };
+                { "Red", 100 }, { "Green", 100 }, { "Blue", 100 } };
         private static void ColorMenuAdj()
         {
             ICustomShowableLayoutedMenu Menu = null;
@@ -217,4 +212,3 @@ namespace UIExpansionKit.API
         public static LayoutDescription QuickMenu3Column4Row = new LayoutDescription { NumColumns = 3, RowHeight = 380 / 4, NumRows = 4 };
     }
 }
-
