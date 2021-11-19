@@ -131,11 +131,13 @@ namespace HideCameraIndicators
                     else 
                         camObj.transform.Find("Indicator/RemoteShape/Camera_Lens").localScale = new Vector3(.2f, .2f, .2f);
 
-                    camObj.transform.Find("Indicator/RemoteShape/Camera_Lens/UserCamera_Lens_New").GetComponent<MeshRenderer>().material.mainTextureScale = hideCamTex.Value ? new Vector2(.1f, .1f) : new Vector2(1, 1);
-                    camObj.transform.Find("Indicator/RemoteShape/Camera_Lens/UserCamera_Lens_New").GetComponent<MeshRenderer>().material.mainTextureOffset = hideCamTex.Value ? new Vector2(.2f, .3f) : new Vector2(0f, 0f);
+                    if (!camObj?.transform?.root?.name.Contains("[Local]") ?? true) return;
+                    //MelonLogger.Msg($"Processed Shared Mat for: {camObj?.transform?.root?.name}");
+                    camObj.transform.Find("Indicator/RemoteShape/Camera_Lens/UserCamera_Lens_New").GetComponent<MeshRenderer>().sharedMaterial.mainTextureScale = hideCamTex.Value ? new Vector2(.1f, .1f) : new Vector2(1, 1);
+                    camObj.transform.Find("Indicator/RemoteShape/Camera_Lens/UserCamera_Lens_New").GetComponent<MeshRenderer>().sharedMaterial.mainTextureOffset = hideCamTex.Value ? new Vector2(.2f, .3f) : new Vector2(0f, 0f);
 
-                    camObj.transform.Find("Indicator/RemoteShape/Camera_Lens/UserCamera_Lens_New").GetComponent<MeshRenderer>().material.color = recolorCams.Value ? camColor.Value : new Color(.8f, .8f, .8f);
-                    camObj.transform.Find("Indicator/RemoteShape/Camera_Lens/UserCamera_Lens_New").GetComponent<MeshRenderer>().material.SetFloat("_GlossMapScale", noGloss.Value ? 0f : 1f);
+                    camObj.transform.Find("Indicator/RemoteShape/Camera_Lens/UserCamera_Lens_New").GetComponent<MeshRenderer>().sharedMaterial.color = recolorCams.Value ? camColor.Value : new Color(.8f, .8f, .8f);
+                    camObj.transform.Find("Indicator/RemoteShape/Camera_Lens/UserCamera_Lens_New").GetComponent<MeshRenderer>().sharedMaterial.SetFloat("_GlossMapScale", noGloss.Value ? 0f : 1f);
                 }
                 //MelonLogger.Msg($"Processed: {username}");
             }
@@ -198,7 +200,6 @@ namespace HideCameraIndicators
         {
             return (value < min) ? min : (value > max) ? max : value;
         }
-
     }
 }
 
