@@ -6,6 +6,7 @@ They all require [Melon Loader](https://melonwiki.xyz/#/README?id=installation-o
 **This was made in my free time, and is provided AS IS without warranty of any kind, express or implied. Any use is at your own risk and you accept all responsibility**
 
 # Mods not currently published on VRCMG:
+* QMVolumePercent
 * DisableOneHandMovementUI
 * DisableControllerOverlay
 * DisableQMSafeMode
@@ -158,6 +159,12 @@ Have you ever thought "This world's lighting sucks" or "It's too dark" well I ha
 You can access this mod's features with the 'Light Menu' button on the UIX QuickMenu
 
 ![image](https://user-images.githubusercontent.com/81605232/141375999-974173df-b6ca-4b5c-9350-88589d3e8106.png)
+
+# QMVolumePercent
+
+This mod adds percentage text to the sliders in the Quick Menu Audio Tab. The color of the text is customizable in Mod Settings. 
+
+![image](https://user-images.githubusercontent.com/81605232/142803792-a7244ead-1205-4db4-94e0-c3f7ae6b49d8.png)
 
 # PlayerSpeedAdjSlower
 Did you ever want to move slower in game? This mod lets you do that! This is a very simple mod that uses [UIExpansionKit](https://github.com/knah/VRCMods/) to add three buttons to your settings menu. Default Speed, Half speed and 1/10 speed. 
