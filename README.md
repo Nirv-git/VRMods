@@ -6,6 +6,7 @@ They all require [Melon Loader](https://melonwiki.xyz/#/README?id=installation-o
 **This was made in my free time, and is provided AS IS without warranty of any kind, express or implied. Any use is at your own risk and you accept all responsibility**
 
 # Mods not currently published on VRCMG:
+* IKTpresets
 * LocalLightMod
 * DisableOneHandMovementUI
 * DisableControllerOverlay
@@ -105,7 +106,11 @@ In mod settings there is one preference, the distance from your head the camera 
 
 # ToggleIKTAnim
 Did you like having a button you could pin to your QuickMenu to quickly toggle movement animations with IKTweaks? This ultra simple mod adds a toggle to your QM that forcefully sets the preference for IgnoreAnimationsMode betweek "None" and "All".    
-It is simple, dirty, but works!    
+It is simple, dirty, but works!   
+
+# IKTpresets
+Another mod that screws with the preferences of IKTweaks! I made this to be able to quickly change preferences when switching between avatars and to make it easier to tune the settings for an avatar. 
+Features 16 slots to save presets to and a UIX based QuickMenu editor of common settings. 
 
 
 # LocalCube
