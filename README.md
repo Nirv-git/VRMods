@@ -6,7 +6,6 @@ They all require [Melon Loader](https://melonwiki.xyz/#/README?id=installation-o
 **This was made in my free time, and is provided AS IS without warranty of any kind, express or implied. Any use is at your own risk and you accept all responsibility**
 
 # Mods not currently published on VRCMG:
-* QMVolumePercent (Pending)
 * LocalLightMod
 * DisableOneHandMovementUI
 * DisableControllerOverlay
