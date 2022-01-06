@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using VRCSDK2;
 using System;
 
-[assembly: MelonInfo(typeof(LocalLightMod.Main), "LocalLightMod", "0.4", "Nirvash")]
+[assembly: MelonInfo(typeof(LocalLightMod.Main), "LocalLightMod", "0.4.1", "Nirvash")]
 [assembly: MelonGame("VRChat", "VRChat")]
 [assembly: MelonColor(ConsoleColor.Cyan)]
 

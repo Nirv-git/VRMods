@@ -565,8 +565,18 @@ namespace LocalLightMod
                 });
                 storedMenu.AddSimpleButton($"Save", () =>
                 {
-                    SaveSlots.StorePrefs(slot.Key, (Main.Config.pickupOrient, Main.Config.pickupable, Main.Config.lightType, Main.Config.lightRange, Main.Config.lightSpotAngle, Main.Config.lightColor, Main.Config.lightIntensity, Main.Config.lightBounceIntensity, Main.Config.lightShadows, Main.Config.lightShadowStr, Main.Config.name, Main.Config.hideMeshRender));
-                    SavedPrefSlots();
+                    var menu2 = ExpansionKitApi.CreateCustomQuickMenuPage(LayoutDescriptionCustom.QuickMenu1ColumnWideSlim);
+                    menu2.AddLabel($"Are you sure you want to save to slot:\n{slot.Key} | {slot.Value.Item11}");
+                    menu2.AddSimpleButton($"Yes", () =>
+                    {
+                        SaveSlots.StorePrefs(slot.Key, (Main.Config.pickupOrient, Main.Config.pickupable, Main.Config.lightType, Main.Config.lightRange, Main.Config.lightSpotAngle, Main.Config.lightColor, Main.Config.lightIntensity, Main.Config.lightBounceIntensity, Main.Config.lightShadows, Main.Config.lightShadowStr, Main.Config.name, Main.Config.hideMeshRender));
+                        SavedPrefSlots();
+                    });
+                    menu2.AddSimpleButton($"No", () =>
+                    {
+                        SavedPrefSlots();
+                    });
+                    menu2.Show();
                 });
 
                 if (slot.Key == 4)
