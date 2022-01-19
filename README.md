@@ -1,3 +1,4 @@
+
 This is a collection of a few simple mods I have made. 
 They all require [Melon Loader](https://melonwiki.xyz/#/README?id=installation-on-il2cpp-games) and [UIExpansionKit](https://github.com/knah/VRCMods/)
 
@@ -268,7 +269,7 @@ Why make this? Because randomly that outline gets stuck on and the only way in t
 
 This has been tested with Index controllers, but should work with others, probably? 
 
-Options to enable/disable are in UIX Settings Quick Menu
+Options to enable/disable are in UIX Settings Quick Menu 
 
 ![image](https://user-images.githubusercontent.com/81605232/150062034-318f47f8-eec9-46e2-85ea-806aa721fcea.png)
     
