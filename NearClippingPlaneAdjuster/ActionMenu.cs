@@ -48,20 +48,33 @@ namespace NearClipPlaneAdj
 
         private static void AMsubMenu()
         {
+            var clipList = new float[] {
+                .05f,
+                .01f,
+                .001f,
+                .0001f
+            };
+
             foreach (var clip in clipList)
             { 
-                CustomSubMenu.AddButton(clip.Key.ToString(), () =>
+                CustomSubMenu.AddButton(clip.ToString(), () =>
                 {
-                    NearClipPlaneAdjMod main = new NearClipPlaneAdjMod(); main.ChangeNearClipPlane(clip.Key, true);
-                }, clip.Value);
+                    NearClipPlaneAdjMod main = new NearClipPlaneAdjMod(); main.ChangeNearClipPlane(clip, true);
+                }, StoredIcon(clip));
             }
         }
 
-        public static Dictionary<float, Texture2D> clipList = new Dictionary<float, Texture2D> {
-                { .05f, n05 },
-                { .01f, n01 },
-                { .001f, n001 },
-                { .0001f, n0001 }
-            };
+        
+        static ref Texture2D StoredIcon(float key)
+        {
+            switch (key)
+            {
+                case .05f: return ref n05;
+                case .01f: return ref n01;
+                case .001f: return ref n001;
+                case .0001f: return ref n0001;
+                default: NearClipPlaneAdjMod.Logger.Msg("Something Broke - StoredIcon Switch"); return ref plane;
+            }
+        }
     }
 }

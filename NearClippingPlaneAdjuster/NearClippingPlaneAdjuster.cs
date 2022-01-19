@@ -19,19 +19,19 @@ namespace NearClipPlaneAdj
     {
         public static MelonLogger.Instance Logger;
 
-        public MelonPreferences_Entry<bool> keybindsEnabled;
-        public MelonPreferences_Entry<bool> smallerDefault;
-        public MelonPreferences_Entry<bool> raiseNearClip;
-        public MelonPreferences_Entry<bool> changeUIcam;
-        public MelonPreferences_Entry<bool> AMAPI_en;
+        public static MelonPreferences_Entry<bool> keybindsEnabled;
+        public static MelonPreferences_Entry<bool> smallerDefault;
+        public static MelonPreferences_Entry<bool> raiseNearClip;
+        public static MelonPreferences_Entry<bool> changeUIcam;
+        public static MelonPreferences_Entry<bool> AMAPI_en;
         public static MelonPreferences_Entry<bool> amapi_ModsFolder;
-        public MelonPreferences_Entry<bool> UIX_butts_QM;
+        public static MelonPreferences_Entry<bool> UIX_butts_QM;
 
-        public float oldNearClip;
-        public float lastSetNearClip;
-        public Camera UIcamera;
+        public static float oldNearClip;
+        public static float lastSetNearClip;
+        public static Camera UIcamera;
 
-        private GameObject n05, n01, n001, n0001, QMbutt;
+        private static GameObject n05, n01, n001, n0001, QMbutt;
 
 
         public override void OnApplicationStart()
