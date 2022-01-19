@@ -9,13 +9,14 @@ using UnityEngine.UI;
 using VRCSDK2;
 
 
-[assembly: MelonInfo(typeof(LocalCamera.Main), "LocalCameraMod", "1.0.3", "Nirvash")]
+[assembly: MelonInfo(typeof(LocalCamera.Main), "LocalCameraMod", "1.0.9", "Nirvash")]
 [assembly: MelonGame("VRChat", "VRChat")]
 
 namespace LocalCamera
 {
     public class Main : MelonMod
     {
+        public static object activeCoroutine;
 
         public GameObject _localCam = null;
         public GameObject _stick = null;
@@ -23,13 +24,16 @@ namespace LocalCamera
         public Boolean parentToTracking = false;
         public Boolean _followSelfie = false;
         public Boolean _pickupable = true;
+        public Boolean hideCam = false;
         public static Dictionary<string, Transform> buttonList = new Dictionary<string, Transform>();
+
+        public static MelonPreferences_Entry<bool> parentTracking;
 
         public override void OnApplicationStart()
         {
             MelonPreferences.CreateCategory("LocalCamera", "LocalCamera");
             MelonPreferences.CreateEntry("LocalCamera", "CameraRes4k", false, "4k Camera Texture Res (1080p default)");
-            MelonPreferences.CreateEntry("LocalCamera", "ParentToTracking", false, "Parent Camera to Tracking Space");
+            parentTracking = MelonPreferences.CreateEntry("LocalCamera", "ParentToTracking", false, "Parent Camera to Tracking Space");
             //MelonPreferences.CreateEntry("LocalCamera", "DelayButton", false, "Put button last on the list (Req restart)");
 
             //if (MelonPreferences.GetEntryValue<bool>("LocalCamera", "DelayButton")) MelonCoroutines.Start(SetupUI()); //Dirty hack broke with ML 0.4.0
@@ -52,7 +56,7 @@ namespace LocalCamera
             buttonList.Clear();
             localcamMenu.AddSimpleButton("Local Camera\n-----\nClose menu", () => localcamMenu.Hide());
             localcamMenu.AddSimpleButton($"Camera is\n{(_localCam != null ? "Enabled" : "Disabled") }", (() => ToggleCamera()), (button) => buttonList["toggleBut"] = button.transform);
-            localcamMenu.AddSimpleButton($"Toggle Tracking Space\n {(parentToTracking ? "-Following-" : "-Not Following-")} ", (() => TrackingSpace()), (button) => buttonList["trackingBut"] = button.transform);
+            localcamMenu.AddToggleButton($"Hide Camera", ((action) => HideMesh()), () => hideCam);
 
             localcamMenu.AddSimpleButton("Larger", (() => CamScale(1)));
             localcamMenu.AddSimpleButton("Smaller", (() => CamScale(-1)));
@@ -64,7 +68,9 @@ namespace LocalCamera
 
             localcamMenu.AddSimpleButton("Selfie Stick", (() => Stick(true)));
             localcamMenu.AddSimpleButton("Rotate to Head", (() => RotateHead()));
-            localcamMenu.AddSimpleButton($"{(_pickupable ? "Pickupable" : "Not Pickupable")}", (() => CamPickup()), (button) => buttonList["pickupBut"] = button.transform);
+            localcamMenu.AddToggleButton($"Follow Tracking Space", ((action) => TrackingSpace()), () => parentTracking.Value);
+
+            localcamMenu.AddToggleButton($"Pickupable", ((action) => CamPickup()), () => _pickupable);
 
             localcamMenu.Show();
 
@@ -144,10 +150,10 @@ namespace LocalCamera
                 photoCam.transform.rotation = photoCam.transform.rotation * Quaternion.AngleAxis(180, Vector3.up);  // Rotate to face you
                 photoCam.GetOrAddComponent<Camera>().targetTexture = text;
                 photoCam.GetOrAddComponent<Camera>().nearClipPlane = .01f;
-                photoCam.GetOrAddComponent<Camera>().cullingMask = -5153;
+                photoCam.GetOrAddComponent<Camera>().cullingMask = -529645;//-5153;
 
 
-                if (parentToTracking) localcam.transform.SetParent(GameObject.Find("_Application/TrackingVolume/PlayerObjects").transform, true);
+                if (parentTracking.Value) localcam.transform.SetParent(GameObject.Find("_Application/TrackingVolume/PlayerObjects").transform, true);
 
                 _localCam = localcam;
             }
@@ -179,18 +185,18 @@ namespace LocalCamera
             else pickup.pickupable = true;
             _pickupable = pickup.pickupable;
 
-            buttonList["pickupBut"].GetComponentInChildren<Text>().text = $"{(_pickupable ? "Pickupable" : "Not Pickupable")}";
+           //buttonList["pickupBut"].GetComponentInChildren<Text>().text = $"{(_pickupable ? "Pickupable" : "Not Pickupable")}";
         }
 
         private void TrackingSpace()
         { //This feels messy
             if (_localCam is null) return;
-            MelonPreferences.SetEntryValue<bool>("LocalCamera", "ParentToTracking", !MelonPreferences.GetEntryValue<bool>("LocalCamera", "ParentToTracking"));
-            if (MelonPreferences.GetEntryValue<bool>("LocalCamera", "ParentToTracking")) _localCam.transform.SetParent(GameObject.Find("_Application/TrackingVolume/PlayerObjects").transform, true);
+            parentTracking.Value =  !parentTracking.Value;
+            if (parentTracking.Value) _localCam.transform.SetParent(GameObject.Find("_Application/TrackingVolume/PlayerObjects").transform, true);
             else _localCam.transform.SetParent(null);
             parentToTracking = MelonPreferences.GetEntryValue<bool>("LocalCamera", "ParentToTracking");
 
-            buttonList["trackingBut"].GetComponentInChildren<Text>().text = $"Toggle Tracking Space\n {(parentToTracking ? "-Following-" : "-Not Following-")} ";
+            //buttonList["trackingBut"].GetComponentInChildren<Text>().text = $"Toggle Tracking Space\n {(parentToTracking ? "-Following-" : "-Not Following-")} ";
         }
 
         private void RotateHead()
@@ -202,12 +208,19 @@ namespace LocalCamera
             _localCam.transform.rotation = _localCam.transform.rotation * Quaternion.AngleAxis(180, Vector3.up); //Flip so screen is visible 
         }
 
+        private void HideMesh()
+        {
+            if (_localCam is null) return;
+            hideCam = !hideCam;
+            _localCam.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = !hideCam;
+        }
+
         private void Stick(Boolean create)
         {
             if (_stick != null)
             {
                 _followSelfie = false;
-                MelonCoroutines.Stop(FollowSelfie());
+                MelonCoroutines.Stop(activeCoroutine);
                 //Stop the follow task and then destory
                 UnityEngine.Object.Destroy(_stick);
                 _stick = null;
@@ -215,7 +228,7 @@ namespace LocalCamera
             else if(create == true)//Only enable the stick if you are meaning to
             {
                 if (_localCam is null) ToggleCamera();//If stick is enabled without camera, make the camera first
-                float stickLen = 2f;
+                float stickLen = 5f;
                 GameObject stick = GameObject.CreatePrimitive(PrimitiveType.Cube);
                 stick.name = "Stick";
                 stick.transform.localScale = new Vector3(.025f, .025f, stickLen);
@@ -234,7 +247,7 @@ namespace LocalCamera
                 stick.GetOrAddComponent<MeshRenderer>().material = mat;
 
                 _stick = stick;
-                MelonCoroutines.Start(FollowSelfie());
+                activeCoroutine = MelonCoroutines.Start(FollowSelfie());
             }
         }
 
@@ -259,7 +272,7 @@ namespace LocalCamera
     {
         public struct LayoutDescriptionCustom
         {
-            public static LayoutDescription QuickMenu = new LayoutDescription { NumColumns = 3, RowHeight = 380 / 4, NumRows = 4 };
+            public static LayoutDescription QuickMenu = new LayoutDescription { NumColumns = 3, RowHeight = 380 / 5, NumRows = 5 };
     }
     }
 
