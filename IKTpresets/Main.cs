@@ -189,7 +189,23 @@ namespace IKTpresets
                 //Logger.Msg($"{slot.Key}");
                 menu.AddSimpleButton($"Slot: {slot.Key}\n{slotNames[slot.Key]}", (() =>
                 {
-                    SaveSlots.LoadSlot(slot.Key);
+                    if (slotNames[slot.Key] == "N/A")
+                    {
+                        var menu2 = ExpansionKitApi.CreateCustomQuickMenuPage(LayoutDescriptionCustom.QuickMenu1ColumnWideSlim);
+                        menu2.AddLabel($"This slot has no name set, are you sure you want to load from it?");
+                        menu2.AddSimpleButton($"Yes", () =>
+                        {
+                            SaveSlots.LoadSlot(slot.Key);
+                            PresetsMain();
+                        });
+                        menu2.AddSimpleButton($"No", () =>
+                        {
+                            PresetsMain();
+                        });
+                        menu2.Show();
+                    }
+                    else
+                        SaveSlots.LoadSlot(slot.Key);
                 }));
             }
 
@@ -750,7 +766,23 @@ namespace IKTpresets
                 storedMenu.AddLabel(label);
                 storedMenu.AddSimpleButton($"Load", () =>
                 {
-                    SaveSlots.LoadSlot(slot.Key);
+                    if (slotNames[slot.Key] == "N/A")
+                    {
+                        var menu2 = ExpansionKitApi.CreateCustomQuickMenuPage(LayoutDescriptionCustom.QuickMenu1ColumnWideSlim);
+                        menu2.AddLabel($"This slot has no name set, are you sure you want to load from it?");
+                        menu2.AddSimpleButton($"Yes", () =>
+                        {
+                            SaveSlots.LoadSlot(slot.Key);
+                            SaveLoadMenu();
+                        });
+                        menu2.AddSimpleButton($"No", () =>
+                        {
+                            SaveLoadMenu();
+                        });
+                        menu2.Show();
+                    }
+                    else
+                        SaveSlots.LoadSlot(slot.Key);
                 });
                 storedMenu.AddSimpleButton($"Save", () =>
                 {
