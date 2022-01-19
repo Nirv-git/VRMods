@@ -16,6 +16,7 @@ namespace DisableControllerOverlay
         public static MelonLogger.Instance Logger;
         public static MelonPreferences_Category cat;
         public static MelonPreferences_Entry<bool> disableToolTipsOnLoad;
+        public static MelonPreferences_Entry<bool> disableToolTips;
         public static MelonPreferences_Entry<bool> disableMeshOnly;
 
         public bool loadOnce = false;
@@ -25,23 +26,27 @@ namespace DisableControllerOverlay
             Logger = new MelonLogger.Instance("DisableControllerOverlay", ConsoleColor.DarkYellow);
 
             cat = MelonPreferences.CreateCategory("DisableControllerOverlay", "DisableControllerOverlay");
-            disableToolTipsOnLoad = MelonPreferences.CreateEntry("DisableControllerOverlay", nameof(disableToolTipsOnLoad), false, "Disable Controller Tooltips on Game Load");
+            disableToolTipsOnLoad = MelonPreferences.CreateEntry("DisableControllerOverlay", nameof(disableToolTipsOnLoad), true, "Disable Controller Tooltips on Game Load");
+            disableToolTips = MelonPreferences.CreateEntry("DisableControllerOverlay", nameof(disableToolTips), true, "Disable Controller Tooltips");
             disableMeshOnly = MelonPreferences.CreateEntry("DisableControllerOverlay", nameof(disableMeshOnly), true, "Disable Controller Mesh Only");
 
-            var toolTipsMenu = ExpansionKitApi.CreateCustomQuickMenuPage(LayoutDescription.WideSlimList);
+            disableToolTips.OnValueChanged += disableChange;
+            disableMeshOnly.OnValueChanged += disableChange;
+
+            var toolTipsMenu = ExpansionKitApi.CreateCustomQuickMenuPage(LayoutDescriptionCustom.QuickMenu1Column5Row);
             ExpansionKitApi.GetExpandedMenu(ExpandedMenu.UiElementsQuickMenu).AddSimpleButton("Controller Tooltips", () => toolTipsMenu.Show());
-            toolTipsMenu.AddLabel("Enable/Disable the Controller Tooltips");
-            toolTipsMenu.AddSimpleButton("Enable Tooltips", (() => ToggleToolTips(true)));
-            toolTipsMenu.AddSimpleButton("Disable Tooltips", (() => ToggleToolTips(false)));
+            toolTipsMenu.AddLabel("Controller Tooltips");
+            toolTipsMenu.AddToggleButton("Disable Controller Tooltips", (action) =>
+            {
+                disableToolTips.Value = !disableToolTips.Value;
+            }, () => disableToolTips.Value);
             toolTipsMenu.AddToggleButton("Disable Controller Mesh Only", (action) =>
             {
                 disableMeshOnly.Value = !disableMeshOnly.Value;
-                cat.SaveToFile();
             }, () => disableMeshOnly.Value);
             toolTipsMenu.AddToggleButton("Disable on Game Load", (action) =>
             {
                 disableToolTipsOnLoad.Value = !disableToolTipsOnLoad.Value;
-                cat.SaveToFile();
             }, () => disableToolTipsOnLoad.Value);
             toolTipsMenu.AddSimpleButton("Close", () => toolTipsMenu.Hide());
         }
@@ -63,11 +68,22 @@ namespace DisableControllerOverlay
 
         public IEnumerator OnLoad()
         {
+            if (!disableToolTipsOnLoad.Value) yield break;
+            Logger.Msg("Waiting for Controllers to Init");
             while (GameObject.Find("_Application/TrackingVolume/TrackingSteam(Clone)/SteamCamera/[CameraRig]/Controller (left)") == null)
                 yield return new WaitForSeconds(1f);
-            if (disableToolTipsOnLoad.Value) ToggleToolTips(false);
+            Logger.Msg("Controllers Init'ed");
+            disableToolTips.Value = true;
+            ToggleToolTips(false);
         }
 
+
+        public void disableChange(bool oldValue, bool newValue)
+        {
+            if (oldValue == newValue) return; //If setting gets updated, enable all Tooltip options, then disable what we currently want to
+            ToggleToolTips(true);
+            if (disableToolTips.Value) ToggleToolTips(false);
+        }
 
         private void ToggleToolTips(bool value)
         {
@@ -83,15 +99,17 @@ namespace DisableControllerOverlay
                     for (int i = 0; i < Con.transform.childCount; i++)
                     {
                         GameObject child = Con.transform.GetChild(i).gameObject;
-                        if (child.name.StartsWith("ControllerUI") && child.name.EndsWith("(Clone)"))
+                        //Logger.Msg(i +"-"+ child.name);
+
+                        if (child.name.StartsWith("ControllerUI"))// && child.name.EndsWith("(Clone)"))
                         {
                             if (disableMeshOnly.Value || value == true)
                             {
-                                Logger.Msg(child.name + " - Mesh root objects set to: " + value);
-                                var root = child.transform.Find("root").transform;
-                                for (int r = 0; r < root.childCount; r++)
+                                Logger.Msg(child.name + " - Mesh objects set to: " + value);
+                                foreach (var meshRen in child.GetComponentsInChildren<MeshRenderer>(true))
                                 {
-                                    root.GetChild(r).gameObject.SetActive(value);
+                                    //Logger.Msg(meshRen.name);
+                                    meshRen.enabled = value;
                                 }
                             }
                             if (!disableMeshOnly.Value || value == true)
@@ -102,8 +120,17 @@ namespace DisableControllerOverlay
                         }
                     }
                 }
+                else Logger.Msg("Controller not found - " + c);
             }
         }
+    }
+}
+
+namespace UIExpansionKit.API
+{
+    public struct LayoutDescriptionCustom
+    {
+        public static LayoutDescription QuickMenu1Column5Row = new LayoutDescription { NumColumns = 1, RowHeight = 380 / 5, NumRows = 5 };
     }
 }
 
