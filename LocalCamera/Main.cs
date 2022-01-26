@@ -150,7 +150,7 @@ namespace LocalCamera
                 photoCam.transform.rotation = photoCam.transform.rotation * Quaternion.AngleAxis(180, Vector3.up);  // Rotate to face you
                 photoCam.GetOrAddComponent<Camera>().targetTexture = text;
                 photoCam.GetOrAddComponent<Camera>().nearClipPlane = .01f;
-                photoCam.GetOrAddComponent<Camera>().cullingMask = -529645;//-5153;
+                photoCam.GetOrAddComponent<Camera>().cullingMask = -5172;//-529645;//-5153; //Now just -5153 minus 19/reserved2
 
 
                 if (parentTracking.Value) localcam.transform.SetParent(GameObject.Find("_Application/TrackingVolume/PlayerObjects").transform, true);
