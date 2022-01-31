@@ -1,9 +1,11 @@
-world_34243244365, Test world
-world_5446464545, Test world
-world_334323432, Test world target
-world_3434354325, Test world
-wrld_e4908cea-023b-4749-9ad7-a898b12996e7, Test Pilots
-wrld_4d588c67-d7b0-421e-bc04-d1c3412f2ea5, Gumball Lounge NEW
-wrld_9be11bdf-8521-4613-a549-67515a54d69d, Club Gumball
-wrld_fd1b10c7-fac1-45fd-adf2-53f9a30e032d, The Legend of Zelda˸ Breath of the Wild - Great Plateau
-world_54546464363464, Test world
+world_34243244365, true, true-0.01 false-0.001
+world_5446464545, true, Test world
+world_334323432, true, Test world target
+world_3434354325, true, Test world
+wrld_e4908cea-023b-4749-9ad7-a898b12996e7, true, Test Pilots
+wrld_4d588c67-d7b0-421e-bc04-d1c3412f2ea5, true, Gumball Lounge NEW
+wrld_9be11bdf-8521-4613-a549-67515a54d69d, true, Club Gumball
+wrld_fd1b10c7-fac1-45fd-adf2-53f9a30e032d, true, The Legend of Zelda˸ Breath of the Wild - Great Plateau
+wrld_bfbfef9d-3084-41b5-b68a-97b2667a04c8, false, Amber Glade 
+wrld_aa762efb-17b3-4302-8f41-09c4db2489ed, false, PROJECT˸ SUMMER FLARE
+world_54546464363464, true, Test world
