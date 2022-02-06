@@ -14,13 +14,13 @@ Note: This mod will not fix your menu breaking at small avatar sizes. However, t
 This mod requires [Melon Loader](/https://melonwiki.xyz/#/README?id=installation-on-il2cpp-games) and [UIExpansionKit](https://github.com/knah/VRCMods/)     
  **Supports: [AMAPI](https://api.vrcmg.com/v0/mods/201/ActionMenuApi.dll)**
 
-Once you install the mod you should see new options to the left of your Settings menu. 
+Once you install the mod you should see new options to the left of your Settings menu or under the Settings QuickMenu tab. 
 
 ![image](https://user-images.githubusercontent.com/81605232/150061675-da9820de-0893-4add-9e22-1a7c7368bc27.png)
 
 
-Very rarely using .0001 near plane distance will stop you from being able to interact with your menu, I have only ever seen this in a handful of worlds where the player location is far from the origin of the map. However .01 should always be safe to use as that is the normal minimum size Unity lets you use.  
-
+Very rarely using .0001 near plane distance will stop you from being able to interact with your menu, I have only ever seen this in a handful of worlds where the player location is far from the origin of the map. However .01 should always be safe to use as that is the normal minimum size Unity lets you use.      
+The mod now has a (default enabled) option to **blacklist** certain worlds from automatically getting their Nearclipping planes adjusted for the 0.01 and 0.001 values. This is to stop the mod from harming user's experience on worlds that really need a further clipping plane to look good. _You can report any worlds needing to be blacklisted by opening a ticket._
 
 VRChat will set this back to default every world change. This mod will set the near plane clipping distance to .01 15 seconds after you load into a world.  (Reason for the delay is that we can't know exactly when the world's referenceCamera's settings are copied onto the player's camera)
 
@@ -28,6 +28,8 @@ Now adjusts the clipping plane on your photo camera thanks to an addition by tyl
 
 Now includes an option to adjust the Nearclipping Plane up to 0.05. This was suggested as a compatibility option for very large worlds where the Far Clipping Plane was getting pulled in too close by 0.01
 
-There are now two preferences in Mod Settings, 
 * Keyboard Shortcuts - Enables keyboard shortcuts to set your clipping plane to the smallest or largest values.  **[** for 0.001 and  **]** for 0.05
 * Smaller Default - Sets a smaller value on World Change - 0.001 vs 0.01   
+
+
+
