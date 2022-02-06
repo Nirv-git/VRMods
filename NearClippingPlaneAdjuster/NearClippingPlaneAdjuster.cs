@@ -10,6 +10,11 @@ using System.Linq;
 using System.Net;
 using System;
 
+using MelonLoader;
+using System;
+using System.Linq;
+using System.Collections.Generic;
+
 [assembly: MelonInfo(typeof(NearClipPlaneAdj.NearClipPlaneAdjMod), "NearClipPlaneAdj", "1.63", "Nirvash")]
 [assembly: MelonGame("VRChat", "VRChat")]
 [assembly: MelonOptionalDependencies("ActionMenuApi")]
@@ -30,7 +35,7 @@ namespace NearClipPlaneAdj
         public static MelonPreferences_Entry<bool> UIX_butts_QM;
         public static MelonPreferences_Entry<bool> defaultChangeBlackList;
 
-        public static string blackList;
+        public static Dictionary<string, System.Tuple<bool, string>> blackList; 
         public static float oldNearClip;
         public static float lastSetNearClip;
         public static Camera UIcamera;
@@ -52,7 +57,7 @@ namespace NearClipPlaneAdj
             
             AMAPI_en = MelonPreferences.CreateEntry<bool>("NearClipAdj", "AMAPI_en", true, "Action Menu API Support (Requires Restart)");
             amapi_ModsFolder = MelonPreferences.CreateEntry("NearClipAdj", "amapi_ModsFolder", false, "Place Action Menu in 'Mods' Sub Menu instead of 'Config' menu (Restert Required)");
-            defaultChangeBlackList = MelonPreferences.CreateEntry("NearClipAdj", "defaultChangeBlackList", true, "Check a blacklist for worlds to not /auto/ change the NearClip on");
+            defaultChangeBlackList = MelonPreferences.CreateEntry("NearClipAdj", "defaultChangeBlackList", true, "Check a blacklist for worlds to not auto change the NearClip on (Restart Required to Enable)");
 
             ExpansionKitApi.GetExpandedMenu(ExpandedMenu.SettingsMenu).AddSimpleButton("Nearplane-0.05", (() => ChangeNearClipPlane(.05f, true)), (butt) => { n05 = butt; butt.SetActive(!UIX_butts_QM.Value); });
             ExpansionKitApi.GetExpandedMenu(ExpandedMenu.SettingsMenu).AddSimpleButton("Nearplane-0.01", (() => ChangeNearClipPlane(.01f, true)), (butt) => { n01 = butt; butt.SetActive(!UIX_butts_QM.Value); });
@@ -90,9 +95,19 @@ namespace NearClipPlaneAdj
         {
             try
             {
+                blackList = new Dictionary<string, System.Tuple<bool, string>>();
                 string url = "https://raw.githubusercontent.com/Nirv-git/VRMods/main/NearClippingPlaneAdjuster/blacklist";
                 WebClient client = new WebClient();
-                blackList = client.DownloadString(url);
+                var temp = client.DownloadString(url);
+                using (System.IO.StringReader reader = new System.IO.StringReader(temp))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        var sub = line.Split(',');
+                        blackList.Add(sub[0], new System.Tuple<bool, string>(bool.Parse(sub[1]), sub[2]));
+                    }
+                }
             }
             catch (Exception ex) { Logger.Error($"GetBlackList error\n" + ex.ToString()); }
         }
@@ -213,12 +228,20 @@ namespace NearClipPlaneAdj
         System.Collections.IEnumerator SetNearClipPlane(float znear)
         {
             yield return new WaitForSecondsRealtime(15); //Wait 15 seconds after world load before setting the clipping value. Waiting for the next/first frame does not work
-            if (defaultChangeBlackList.Value && RoomManager.field_Internal_Static_ApiWorld_0 != null && !blackList.Equals(null))
+            if (defaultChangeBlackList.Value && RoomManager.field_Internal_Static_ApiWorld_0 != null && blackList != null)
             { //Check if world is blacklisted from auto change
-                if (blackList.Contains(RoomManager.field_Internal_Static_ApiWorld_0.id)) //Lazy way to check, but shouldn't be that bad?
+                if (blackList.TryGetValue(RoomManager.field_Internal_Static_ApiWorld_0.id, out var world))
                 {
-                    Logger.Msg(ConsoleColor.Yellow,"Not auto adjusting NearClipping plane, world blacklisted");
-                    yield break;
+                    if (world.Item1)
+                    {
+                        Logger.Msg(ConsoleColor.Yellow, $"Not auto adjusting NearClipping plane, world blacklisted for 0.01 and lower values. \nDebug-{RoomManager.field_Internal_Static_ApiWorld_0.id}, {world.Item2}, {world.Item1}");
+                        yield break;
+                    }
+                    else if(smallerDefault.Value)
+                    {
+                        Logger.Msg(ConsoleColor.Yellow, $"Not auto adjusting NearClipping plane, world blacklisted for 0.001 value. \nDebug-{RoomManager.field_Internal_Static_ApiWorld_0.id}, {world.Item2}, {world.Item1}");
+                        yield break;
+                    }
                 }
             }
             
