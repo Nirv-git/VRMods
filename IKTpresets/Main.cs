@@ -7,7 +7,7 @@ using UIExpansionKit.API;
 using UnityEngine.UI;
 
 [assembly: MelonGame("VRChat", "VRChat")]
-[assembly: MelonInfo(typeof(IKTpresets.Main), "IKTpresets", "0.1.1", "Nirvash", "https://github.com/Nirv-git/VRMods")]
+[assembly: MelonInfo(typeof(IKTpresets.Main), "IKTpresets", "0.1.5", "Nirvash", "https://github.com/Nirv-git/VRMods")]
 
 namespace IKTpresets
 {
@@ -73,6 +73,7 @@ namespace IKTpresets
         private static string tempString = "";
         public static MelonPreferences_Category cat;
         public static MelonPreferences_Entry<bool> saveWithEveryChange;
+        public static MelonPreferences_Entry<string> ignoreAnimModeDefault;
         public static MelonPreferences_Entry<string> savedPrefs;
         public static MelonPreferences_Entry<string> savedPrefNames;
 
@@ -83,6 +84,17 @@ namespace IKTpresets
 
             cat = MelonPreferences.CreateCategory("IKTpresets", "IKTpresets");
             saveWithEveryChange = MelonPreferences.CreateEntry("IKTpresets", nameof(saveWithEveryChange), true, "MelonPreferences.Save with every edit in EditMenu");
+            ignoreAnimModeDefault = MelonPreferences.CreateEntry("IKTpresets", nameof(ignoreAnimModeDefault), nameof(IgnoreAnimationsModeEnum.None), "Animations mode to toggle between 'Ignore all (always slide around)' and. (Default is 'Play all animations')");
+            ExpansionKitApi.RegisterSettingAsStringEnum("IKTpresets",
+                nameof(ignoreAnimModeDefault),
+                new[]
+                {
+                    (nameof(IgnoreAnimationsModeEnum.None), "Play all animations"),
+                    (nameof(IgnoreAnimationsModeEnum.Head), "Ignore head animations"),
+                    (nameof(IgnoreAnimationsModeEnum.Hands), "Ignore hands animations"),
+                    (nameof(IgnoreAnimationsModeEnum.HandAndHead), "Ignore head and hands"),
+                    //(nameof(IgnoreAnimationsModeEnum.All), "Ignore all (always slide around)")
+                });
             savedPrefs = MelonPreferences.CreateEntry("IKTpresets", nameof(savedPrefs), "1,true,true,true,false,true,10,30,30,30,15,2,15,2,ImprovedWingspan,1.1,false,0,-105,0,0.015,-0.005,0;2,true,true,true,false,true,10,30,30,30,15,2,15,2,ImprovedWingspan,1.1,false,0,-105,0,0.015,-0.005,0;3,true,true,true,false,true,10,30,30,30,15,2,15,2,ImprovedWingspan,1.1,false,0,-105,0,0.015,-0.005,0;4,true,true,true,false,true,10,30,30,30,15,2,15,2,ImprovedWingspan,1.1,false,0,-105,0,0.015,-0.005,0;5,true,true,true,false,true,10,30,30,30,15,2,15,2,ImprovedWingspan,1.1,false,0,-105,0,0.015,-0.005,0;6,true,true,true,false,true,10,30,30,30,15,2,15,2,ImprovedWingspan,1.1,false,0,-105,0,0.015,-0.005,0;7,true,true,true,false,true,10,30,30,30,15,2,15,2,ImprovedWingspan,1.1,false,0,-105,0,0.015,-0.005,0;8,true,true,true,false,true,10,30,30,30,15,2,15,2,ImprovedWingspan,1.1,false,0,-105,0,0.015,-0.005,0;9,true,true,true,false,true,10,30,30,30,15,2,15,2,ImprovedWingspan,1.1,false,0,-105,0,0.015,-0.005,0;10,true,true,true,false,true,10,30,30,30,15,2,15,2,ImprovedWingspan,1.1,false,0,-105,0,0.015,-0.005,0;11,true,true,true,false,true,10,30,30,30,15,2,15,2,ImprovedWingspan,1.1,false,0,-105,0,0.015,-0.005,0;12,true,true,true,false,true,10,30,30,30,15,2,15,2,ImprovedWingspan,1.1,false,0,-105,0,0.015,-0.005,0;13,true,true,true,false,true,10,30,30,30,15,2,15,2,ImprovedWingspan,1.1,false,0,-105,0,0.015,-0.005,0;14,true,true,true,false,true,10,30,30,30,15,2,15,2,ImprovedWingspan,1.1,false,0,-105,0,0.015,-0.005,0;15,true,true,true,false,true,10,30,30,30,15,2,15,2,ImprovedWingspan,1.1,false,0,-105,0,0.015,-0.005,0;16,true,true,true,false,true,10,30,30,30,15,2,15,2,ImprovedWingspan,1.1,false,0,-105,0,0.015,-0.005,0", "savedPrefs", "", true);
             savedPrefNames = MelonPreferences.CreateEntry("IKTpresets", nameof(savedPrefNames), "1,N/A;2,N/A;3,N/A;4,N/A;5,N/A;6,N/A;7,N/A;8,N/A;9,N/A;10,N/A;11,N/A;12,N/A;13,N/A;14,N/A;15,N/A;16,N/A", "savedSlotNames", "", true);
 
@@ -90,8 +102,15 @@ namespace IKTpresets
             {
                 ExpansionKitApi.RegisterWaitConditionBeforeDecorating(SetupUI());
             }
-
         }
+
+        public IEnumerator SetupUI()
+        {
+            yield return new WaitForSeconds(1f);
+            InitPrefs();
+            ExpansionKitApi.GetExpandedMenu(ExpandedMenu.QuickMenu).AddSimpleButton("IKT Presets", () => PresetsMain());
+        }
+
         public void InitPrefs()
         {
             category = MelonPreferences.CreateCategory(IkTweaksCategory, "IK Tweaks");
@@ -141,15 +160,6 @@ namespace IKTpresets
 
             HandAngleOffset = category.GetEntry<Vector3>(nameof(HandAngleOffset));//  DefaultHandAngle, "Hand angle offset", null, true);
             HandPositionOffset = category.GetEntry<Vector3>(nameof(HandPositionOffset));//  DefaultHandOffset, "Hand position offset", null, true);
-
-        }
-
-        public IEnumerator SetupUI()
-        {
-            //while (QuickMenu.prop_QuickMenu_0 == null)
-            yield return (object)new WaitForSeconds(1f);
-            InitPrefs();
-            ExpansionKitApi.GetExpandedMenu(ExpandedMenu.QuickMenu).AddSimpleButton("IKT Presets", () => PresetsMain());
         }
 
         public void PresetsMain()
@@ -167,7 +177,7 @@ namespace IKTpresets
             }));
             menu.AddToggleButton("IKT Animations Disabled", (action) =>
             {
-                IgnoreAnimationsMode.Value = GetIgnoreAnimValue() ? "None" : "All";
+                IgnoreAnimationsMode.Value = GetIgnoreAnimValue() ? ignoreAnimModeDefault.Value : "All";
                 MelonPreferences.Save();
             }, () => GetIgnoreAnimValue() );
 
@@ -611,7 +621,7 @@ namespace IKTpresets
             {
                 string label()
                 {
-                    return $"Avatar scaling mode: {MeasureMode.Value}";
+                    return $"Avatar scaling mode: {MeasureMode.Value}\n--Must recalibrate--";
                 }
                 var menu2 = ExpansionKitApi.CreateCustomQuickMenuPage(LayoutDescriptionCustom.QuickMenu1ColumnWideSlim);
                 menu2.AddLabel(label(), (button) => butt = button.transform);
@@ -644,7 +654,7 @@ namespace IKTpresets
             {
                 string label()
                 {
-                    return $"Improved wingspan adjustment factor: {WingspanMeasurementAdjustFactor.Value}\n-Must recalibrate-";
+                    return $"Improved wingspan adjustment factor: {WingspanMeasurementAdjustFactor.Value}\n--Must recalibrate--";
                 }
                 var menu2 = ExpansionKitApi.CreateCustomQuickMenuPage(LayoutDescriptionCustom.QuickMenu1ColumnWideSlim);
                 menu2.AddLabel(label(), (button) => butt = button.transform);
@@ -824,12 +834,12 @@ namespace IKTpresets
             foreach (System.Collections.Generic.KeyValuePair<int, string> slot in slotNames)
             {
                 menu.AddLabel($"Slot: {slot.Key}\n{slot.Value}");
-                menu.AddSimpleButton($"Load", () =>
+                menu.AddSimpleButton($"Load String", () =>
                 {
                     tempString = slot.Value;
                     EditSlotNames();
                 });
-                menu.AddSimpleButton($"Save", () =>
+                menu.AddSimpleButton($"Set String", () =>
                 {
                     SaveSlots.StoreSlotNames(slot.Key, tempString);
                     EditSlotNames();
