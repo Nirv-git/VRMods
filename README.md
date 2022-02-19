@@ -1,3 +1,4 @@
+
 **USE IT AT YOUR OWN RISK. Modding the client is against VRChat's ToS. I am not responsible for any bans or any punishments you may get by using these mods**
 
 **This was made in my free time, and is provided AS IS without warranty of any kind, express or implied. Any use is at your own risk and you accept all responsibility**
@@ -171,6 +172,15 @@ You can access this mod's features with the 'Light Menu' button on the UIX Quick
 This mod adds percentage text to the sliders in the Quick Menu Audio Tab. The color of the text is customizable in Mod Settings. 
 
 ![image](https://user-images.githubusercontent.com/81605232/142803792-a7244ead-1205-4db4-94e0-c3f7ae6b49d8.png)
+
+# FLuxMod
+Adds [VRChat Flux Bloom Removal Shader](https://rollthered.booth.pm/items/3092302) with controls via **[ActionMenuAPI](https://api.vrcmg.com/v0/mods/201/ActionMenuApi.dll)**     
+This is normally intended to go on an avatar to be used to limit bloom, bright highlights and other visual adjustments.    
+Included are 6 save slots for presets. Slot names can be changed in Mod Settings.    
+Due to how AMAPI handles radials I made it so at 97% the puppets are maxed out.    
+
+![image](https://user-images.githubusercontent.com/81605232/154793205-10b80a87-20b7-49af-ac9d-41b57aba3a56.png)
+
 
 # PlayerSpeedAdjSlower
 Did you ever want to move slower in game? This mod lets you do that! This is a very simple mod that uses [UIExpansionKit](https://github.com/knah/VRCMods/) to add three buttons to your settings menu. Default Speed, Half speed and 1/10 speed. 
