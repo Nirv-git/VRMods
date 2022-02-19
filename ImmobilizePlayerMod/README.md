@@ -4,7 +4,7 @@
 
 
 # ImmobilizePlayerMod
-An ultra simple mod, this puts a toggle on the UIX QuickMenu called "Immobilize" clicking will change the Immobilize value on your VRCPlayer to True or False. **Immobilize being True should have the same behavior as opening a big menu like Settings.** 
+This puts a toggle on the UIX QuickMenu called "Immobilize" clicking will change the Immobilize value on your VRCPlayer to True or False. **Immobilize being True should have the same behavior as opening a big menu like Settings.** 
 This will stop your body from spinning while laying down in non FBT with SDK2 avatars, with SDK3 avatars Immobilize breaks the current animation and roots your feet to the ground from my experience. 
 
-In mod settings there are two preferences, where you can toggle having the "Immobilize" button on your quick menu, ~~and delay it's load so it is the last button on the menu.~~
+Now has an option to auto set the Immobilize flag if you are not moving, you can enable to toggle button for this in Mod Settings with the preference "Put Auto Toggle Button on Quick Menu"
