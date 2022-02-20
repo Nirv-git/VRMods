@@ -31,12 +31,14 @@ namespace ImmobilizePlayer
         public bool imState;
         public bool pauseAuto = false;
         public static bool tempDisable = false;
-        public GameObject buttonQM, buttonQMAuto, buttonQMAutoPause;
-        private static VRCUiManager _uiManagerInstance;
-        public object coroutine;
-        public static Image rightIcon;
         private bool waitingToSettle = false;
         private float nextTime;
+        public object coroutine;
+        public GameObject buttonQM, buttonQMAuto, buttonQMAutoPause;
+        public static VRCUiManager _uiManagerInstance;
+        public static Image rightIcon;
+        public static bool WorldTypeGame = false;
+        public static bool CurrentWorldChecked = false;
 
         public override void OnApplicationStart()
         {
@@ -76,7 +78,7 @@ namespace ImmobilizePlayer
             ExpansionKitApi.GetExpandedMenu(ExpandedMenu.QuickMenu).AddToggleButton("Immobilize", (action) =>
             {
                 imState = action;
-                SetImmobilize(action);
+                Utils.SetImmobilize(action);
             }, () => false, (button) => { buttonQM = button; button.gameObject.SetActive(buttonEnabled.Value); });
             ExpansionKitApi.GetExpandedMenu(ExpandedMenu.QuickMenu).AddToggleButton("Immobilize Auto Toggle", (action) =>
             {
@@ -86,24 +88,33 @@ namespace ImmobilizePlayer
 
         public override void OnPreferencesSaved()
         {
+            if (movementToggle.Value) autoButtonEnabled.Value = true; //Maybe
+
             if (buttonQM != null)
                 buttonQM.SetActive(buttonEnabled.Value);
             if (buttonQMAuto != null)
                 buttonQMAuto.SetActive(autoButtonEnabled.Value || movementToggle.Value);
             if (!rightIcon?.Equals(null)??false)
-                rightIcon.gameObject.SetActive(movementToggle.Value && debugHUD.Value);
+                rightIcon.gameObject.SetActive(movementToggle.Value && debugHUD.Value);       
         }
 
         private void OnValueChange(bool oldValue, bool newValue)
         {
-            if (oldValue == newValue) return;
-            if (newValue)
-                coroutine = MelonCoroutines.Start(AutoSet());
-            else
+            try
             {
-                MelonCoroutines.Stop(coroutine);
-                SetImmobilize(false);
+                if (oldValue == newValue) return;
+                if (newValue)
+                {
+                    if (CurrentWorldChecked == false) MelonCoroutines.Start(RiskFunct.CheckWorld());
+                    coroutine = MelonCoroutines.Start(AutoSet());
+                }
+                else
+                {
+                    if (!coroutine?.Equals(null) ?? false) MelonCoroutines.Stop(coroutine);
+                    Utils.SetImmobilize(false);
+                }
             }
+            catch (System.Exception ex) { Logger.Error("Error in starting/stopping coroutine:\n" + ex.ToString()); }
         }
 
         public IEnumerator WaitForQM()
@@ -115,11 +126,51 @@ namespace ImmobilizePlayer
             if (movementToggle.Value) coroutine = MelonCoroutines.Start(AutoSet());
         }
 
-        private void SetImmobilize(bool value)
+        public override void OnSceneWasLoaded(int buildIndex, string sceneName)
         {
-            VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCPlayerApi_0.Immobilize(value);
+            switch (buildIndex)
+            {
+                case -1:
+                    WorldTypeGame = false;
+                    CurrentWorldChecked = false;
+                    if (movementToggle.Value) MelonCoroutines.Start(RiskFunct.CheckWorld());
+                    break;
+                default:
+                    break;
+            }
         }
 
+        static public void VRCTrackingManager_PrepareForCalibration() => OnCalibrationBegin();
+        static void OnCalibrationBegin()
+        { //https://github.com/SDraw/ml_mods/blob/af8eb07bd810067b968f0d21bb1dacf0be89d8b3/ml_clv/Main.cs#L118
+            try
+            {
+                if (debug.Value) Logger.Msg(ConsoleColor.Cyan, "On cal");
+                if (movementToggle.Value)
+                {
+                    if (debug.Value) Logger.Msg(ConsoleColor.Cyan, "Pausing Auto");
+                    tempDisable = true;
+                    movementToggle.Value = false;
+                }
+            }
+            catch (System.Exception ex) { Logger.Error("Error in OnCalibrationBegin:\n" + ex.ToString()); }
+        }
+
+        static public void VRCTrackingManager_RestoreTrackingAfterCalibration() => OnCalibrationEnd();
+        static void OnCalibrationEnd()
+        {
+            try
+            {
+                if (debug.Value) Logger.Msg(ConsoleColor.Cyan, "Off cal");
+                if (tempDisable)
+                {
+                    if (debug.Value) Logger.Msg(ConsoleColor.Cyan, "Resume Auto");
+                    tempDisable = false;
+                    movementToggle.Value = true;
+                }
+            }
+            catch (System.Exception ex) { Logger.Error("Error in OnCalibrationEnd:\n" + ex.ToString()); }
+        }
         private void CreateIndicators()
         {
             Transform hud = GameObject.Find("UnscaledUI/HudContent").transform;
@@ -132,45 +183,6 @@ namespace ImmobilizePlayer
             rightIcon.gameObject.transform.localScale = new Vector3(-1f, 1f, 1f);
             rightIcon.gameObject.SetActive(debugHUD.Value);
             rightIcon.color = new Color(1f, 0f, 1f, 0.25f);
-        }
-
-        private bool MenuOpen()
-        { //Thanks to https://github.com/RequiDev/ReMod.Core/blob/cdd7e84c65e2c23933576e92f7134aec2f52c0bf/VRChat/VRCUiManagerEx.cs#L5
-            if (_uiManagerInstance == null)
-                return true;
-            return _uiManagerInstance.field_Private_Boolean_0;
-        }
-
-        public static bool LocalPlayerFBT()
-        { 
-            var IKController = VRCPlayer.field_Internal_Static_VRCPlayer_0.field_Private_VRC_AnimationController_0.field_Private_IkController_0;
-            var IKControllerEnum = IKController.prop_IkType_0; 
-            var hasfbt = IKControllerEnum.HasFlag(IkController.IkType.SixPoint); 
-            return hasfbt;
-        }
-
-        static public void VRCTrackingManager_PrepareForCalibration() => OnCalibrationBegin();
-        static void OnCalibrationBegin()
-        { //https://github.com/SDraw/ml_mods/blob/af8eb07bd810067b968f0d21bb1dacf0be89d8b3/ml_clv/Main.cs#L118
-            if (debug.Value) Logger.Msg(ConsoleColor.Cyan, "On cal");
-            if (movementToggle.Value)
-            {
-                if (debug.Value) Logger.Msg(ConsoleColor.Cyan, "Pausing Auto");
-                tempDisable = true;
-                movementToggle.Value = false;
-            }
-        }
-
-        static public void VRCTrackingManager_RestoreTrackingAfterCalibration() => OnCalibrationEnd();
-        static void OnCalibrationEnd()
-        {
-            if (debug.Value) Logger.Msg(ConsoleColor.Cyan, "Off cal");
-            if (tempDisable)
-            {
-                if (debug.Value) Logger.Msg(ConsoleColor.Cyan, "Resume Auto");
-                tempDisable = false;
-                movementToggle.Value = true;
-            }
         }
 
         public IEnumerator AutoSet()
@@ -206,8 +218,13 @@ namespace ImmobilizePlayer
                             }
                             if (debug.Value) Logger.Msg(ConsoleColor.Yellow, "End of settleBefore.Value");
                         }
-                        if (LocalPlayerFBT()) //Don't do this on users without FBT, as it will look funny
-                            SetImmobilize(true);
+                        if (Utils.LocalPlayerFBT()) //Don't do this on users without FBT, as it will look funny
+                        {
+                            if (!WorldTypeGame)
+                                Utils.SetImmobilize(true);
+                            else
+                                if (debug.Value) Logger.Msg("Not Immobilizing due to GAME world");
+                        }
                         else
                             if (debug.Value) Logger.Msg("Not Immobilizing due to no FBT");
                         imState = true;
@@ -218,15 +235,15 @@ namespace ImmobilizePlayer
                 else
                 {
                     waitingToSettle = false;
-                    if (!MenuOpen() && imState == true)
+                    if (!Utils.MenuOpen() && imState == true)
                     {
-                        SetImmobilize(false);
+                        Utils.SetImmobilize(false);
                         imState = false;
-                        if (debug.Value) Logger.Msg("Movement && Menu not open - " + MenuOpen());
+                        if (debug.Value) Logger.Msg("Movement && Menu not open - " + Utils.MenuOpen());
                         if (debugHUD.Value) rightIcon.color = new Color(0f, 1f, 0f, 0.25f);
                     }
                     else
-                        if (debug.Value) Logger.Msg("Movement && Menu OPEN || imState = - " + MenuOpen());
+                        if (debug.Value) Logger.Msg("Movement && Menu OPEN || imState = - " + Utils.MenuOpen());
                 }
                 yield return new WaitForSeconds(delay.Value);
             }

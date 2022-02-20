@@ -8,3 +8,4 @@ This puts a toggle on the UIX QuickMenu called "Immobilize" clicking will change
 This will stop your body from spinning while laying down in non FBT with SDK2 avatars, with SDK3 avatars Immobilize breaks the current animation and roots your feet to the ground from my experience. 
 
 Now has an option to auto set the Immobilize flag if you are not moving, you can enable to toggle button for this in Mod Settings with the preference "Put Auto Toggle Button on Quick Menu"
+*  This will only trigger if using VR and FBT and world is not a game world. 
