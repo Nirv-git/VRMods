@@ -35,13 +35,13 @@ namespace ImmobilizePlayer
                 yield return new WaitForSecondsRealtime(1);
             }
             var worldId = currentWorld.id;
-            Main.Logger.Error($"Checking World with Id {worldId}");
+            //Main.Logger.Error($"Checking World with Id {worldId}");
 
             // Check cache for world, so we keep the number of API calls lower.
             if (checkedWorlds.TryGetValue(worldId, out bool outres))
             {
                 Main.WorldTypeGame = outres;
-                Main.Logger.Msg($"Using cached check {Main.WorldTypeGame} for world '{worldId}'");
+                //Main.Logger.Msg($"Using cached check {Main.WorldTypeGame} for world '{worldId}'");
                 alreadyCheckingWorld = false;
                 yield break;
             }
@@ -52,7 +52,7 @@ namespace ImmobilizePlayer
                 Main.WorldTypeGame = false;
                 checkedWorlds.Add(worldId, false);
                 alreadyCheckingWorld = false;
-                Main.Logger.Msg($"GameObject allowed for world '{worldId}'");
+                //Main.Logger.Msg($"GameObject allowed for world '{worldId}'");
                 yield break;
             }
 
@@ -72,7 +72,7 @@ namespace ImmobilizePlayer
                         Main.WorldTypeGame = false;
                         checkedWorlds.Add(worldId, false);
                         alreadyCheckingWorld = false;
-                        Main.Logger.Msg($"EmmVRC allows world '{worldId}'");
+                        //Main.Logger.Msg($"EmmVRC allows world '{worldId}'");
                         yield break;
                 }
             }
@@ -92,14 +92,14 @@ namespace ImmobilizePlayer
                                 if (worldTag.IndexOf("game", StringComparison.OrdinalIgnoreCase) != -1 && worldTag.IndexOf("games", StringComparison.OrdinalIgnoreCase) == -1)
                                 {
                                     tagResult = true;
-                                    Main.Logger.Msg($"Found game tag in world world '{worldId}'");
+                                    //Main.Logger.Msg($"Found game tag in world world '{worldId}'");
                                     break;
                                 }
                             }
                             Main.WorldTypeGame = tagResult;
                             checkedWorlds.Add(worldId, tagResult);
                             alreadyCheckingWorld = false;
-                            Main.Logger.Msg($"Tag search result: '{tagResult}' for '{worldId}'");
+                            //Main.Logger.Msg($"Tag search result: '{tagResult}' for '{worldId}'");
                         }
                         else
                         {
