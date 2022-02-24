@@ -86,6 +86,7 @@ namespace FLuxMod
             CustomSubMenu.AddRadialPuppet("Brightness", f => Main.flux_Brightness.Value = f, Main.flux_Brightness.Value, Bright);
             CustomSubMenu.AddRadialPuppet("Desat", f => Main.flux_Desat.Value = f, Main.flux_Desat.Value, Desat);
 
+            StoredMenu();
             CustomSubMenu.AddSubMenu("Extras", () =>
             {
                 CustomSubMenu.AddSubMenu($"\nReset", () =>
@@ -102,8 +103,6 @@ namespace FLuxMod
                         Main.OnValueChange(0f, 0f);
                     }, checkmark);
                 }, reset);
-
-                StoredMenu();
 
                 CustomSubMenu.AddButton($"*Rotary puppets max out at 97%\n*Slot names can be changed in Mod Settings", () => { }, null);
                 CustomSubMenu.AddButton($"Uses:\nVRChat Flux Bloom Removal Shader\nrollthered.\nbooth.pm", () => { }, null);

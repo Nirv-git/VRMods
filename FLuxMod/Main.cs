@@ -7,7 +7,7 @@ using UnhollowerRuntimeLib;
 using System.IO;
 
 [assembly: MelonGame("VRChat", "VRChat")]
-[assembly: MelonInfo(typeof(FLuxMod.Main), "FLuxMod", "0.3", "Nirvash", "https://github.com/Nirv-git/VRMods")]
+[assembly: MelonInfo(typeof(FLuxMod.Main), "FLuxMod", "0.4", "Nirvash", "https://github.com/Nirv-git/VRMods")]
 //Uses https://rollthered.booth.pm/items/3092302
 namespace FLuxMod
 {
@@ -82,19 +82,15 @@ namespace FLuxMod
             }
             else
             {
-                VRCPlayer player = Utils.GetVRCPlayer();
-                if (player?.field_Internal_Animator_0?.isHuman ?? false)
-                {
-                    GameObject obj = GameObject.Instantiate(fluxPrefab);
-                    GameObject cam = Camera.main.gameObject;
-                    obj.transform.SetParent(cam.transform);
-                    obj.transform.localPosition = new Vector3(0f, 0f, 0f);
-                    obj.layer = 5;
+                GameObject obj = GameObject.Instantiate(fluxPrefab);
+                GameObject cam = Camera.main.gameObject;
+                obj.transform.SetParent(cam.transform);
+                obj.transform.localPosition = new Vector3(0f, 0f, 0f);
+                obj.layer = 5;
 
-                    fluxObj = obj;
-                    OnValueChange(0f, 0f);
-                    isEnabled = true;
-                }
+                fluxObj = obj;
+                OnValueChange(0f, 0f);
+                isEnabled = true;
             }
         }
         
