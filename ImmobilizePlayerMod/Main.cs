@@ -8,7 +8,7 @@ using UnityEngine.XR;
 using System;
 
 
-[assembly: MelonInfo(typeof(ImmobilizePlayer.Main), "ImmobilizePlayerMod", "0.4", "Nirvash")]
+[assembly: MelonInfo(typeof(ImmobilizePlayer.Main), "ImmobilizePlayerMod", "0.4.1", "Nirvash")]
 [assembly: MelonGame("VRChat", "VRChat")]
 
 namespace ImmobilizePlayer
@@ -29,6 +29,7 @@ namespace ImmobilizePlayer
         public static MelonPreferences_Entry<bool> debugHUD;
 
         public bool imState;
+        public static bool ranOnce = false;
         public bool pauseAuto = false;
         public static bool tempDisable = false;
         private bool waitingToSettle = false;
@@ -39,6 +40,10 @@ namespace ImmobilizePlayer
         public static Image rightIcon;
         public static bool WorldTypeGame = false;
         public static bool CurrentWorldChecked = false;
+
+        public static VRCInput vertical;
+        public static VRCInput horizontal;
+
 
         public override void OnApplicationStart()
         {
@@ -53,7 +58,7 @@ namespace ImmobilizePlayer
             settleBefore = MelonPreferences.CreateEntry<bool>("ImPlaMod", "settleBefore", true, "-Auto- Settle for X seconds before Immobilizing");
             settleTime = MelonPreferences.CreateEntry<float>("ImPlaMod", "settleTime", 3f, "-Auto- Time to wait for settling");
 
-            //debug = MelonPreferences.CreateEntry<bool>("ImPlaMod", "debug", false, "debug");
+            debug = MelonPreferences.CreateEntry<bool>("ImPlaMod", "debug", false, "debug");
             debugHUD = MelonPreferences.CreateEntry<bool>("ImPlaMod", "debugHUD", false, "debugHUD");
 
             movementToggle.OnValueChanged += OnValueChange;
@@ -122,8 +127,14 @@ namespace ImmobilizePlayer
             while (GameObject.Find("/UserInterface/Canvas_QuickMenu(Clone)/Container/Window/MicButton") == null) //Why wait for the MicButton, because I use this in other mods so I only need to fix one thing if it breaks in the future! Also you can't open the camera without going through the QM
                 yield return new WaitForSeconds(1f);
             _uiManagerInstance = (VRCUiManager)typeof(VRCUiManager).GetMethods().First(x => x.ReturnType == typeof(VRCUiManager)).Invoke(null, new object[0]);
+            vertical = VRCInputManager.field_Private_Static_Dictionary_2_String_VRCInput_0["Vertical"];
+            horizontal = VRCInputManager.field_Private_Static_Dictionary_2_String_VRCInput_0["Horizontal"];
             CreateIndicators();
             if (movementToggle.Value) coroutine = MelonCoroutines.Start(AutoSet());
+
+            Logger.Msg(ConsoleColor.Green, $"Listing JoystickNames");
+            foreach (var name in Input.GetJoystickNames())
+                Logger.Msg(ConsoleColor.Green, $"{name}");
         }
 
         public override void OnSceneWasLoaded(int buildIndex, string sceneName)
@@ -143,12 +154,13 @@ namespace ImmobilizePlayer
         static public void VRCTrackingManager_PrepareForCalibration() => OnCalibrationBegin();
         static void OnCalibrationBegin()
         { //https://github.com/SDraw/ml_mods/blob/af8eb07bd810067b968f0d21bb1dacf0be89d8b3/ml_clv/Main.cs#L118
+            if (!ranOnce) return;
             try
             {
-                //if (debug.Value) Logger.Msg(ConsoleColor.Cyan, "On cal");
+                if (debug.Value) Logger.Msg(ConsoleColor.Cyan, "On cal");
                 if (movementToggle.Value)
                 {
-                    //if (debug.Value) Logger.Msg(ConsoleColor.Cyan, "Pausing Auto");
+                    if (debug.Value) Logger.Msg(ConsoleColor.Cyan, "Pausing Auto");
                     tempDisable = true;
                     movementToggle.Value = false;
                 }
@@ -161,10 +173,10 @@ namespace ImmobilizePlayer
         {
             try
             {
-                //if (debug.Value) Logger.Msg(ConsoleColor.Cyan, "Off cal");
+                if (debug.Value) Logger.Msg(ConsoleColor.Cyan, "Off cal");
                 if (tempDisable)
                 {
-                    //if (debug.Value) Logger.Msg(ConsoleColor.Cyan, "Resume Auto");
+                    if (debug.Value) Logger.Msg(ConsoleColor.Cyan, "Resume Auto");
                     tempDisable = false;
                     movementToggle.Value = true;
                 }
@@ -187,13 +199,24 @@ namespace ImmobilizePlayer
 
         public IEnumerator AutoSet()
         {
-            if(!XRDevice.isPresent) yield break;
+            ranOnce = true;
+
+            //if(!XRDevice.isPresent) yield break;
             while (movementToggle.Value)
             {
-                //if (debug.Value) Logger.Msg($"GetAxis - Vertical {Input.GetAxis("Vertical")}, Horizontal {Input.GetAxis("Horizontal")}");
-                //if (debug.Value) Logger.Msg($"GetAxisRaw - Vertical {Input.GetAxisRaw("Vertical")}, Horizontal {Input.GetAxisRaw("Horizontal")}");
+                if (debug.Value) { yield return new WaitForSeconds(1); Logger.Msg($"GetAxis - Vertical {Input.GetAxis("Vertical")}, Horizontal {Input.GetAxis("Horizontal")}"); }
+                if (debug.Value) { Logger.Msg(ConsoleColor.Cyan, $"GetAxis - Vertical {Input.GetAxis("Oculus_CrossPlatform_PrimaryThumbstickVertical")}, Horizontal {Input.GetAxis("Oculus_CrossPlatform_PrimaryThumbstickHorizontal")} _Oculus_Primary" ); }
 
-                if (Mathf.Abs(Input.GetAxis("Vertical")) < deadZone.Value && Mathf.Abs(Input.GetAxis("Horizontal")) < deadZone.Value)
+                if (debug.Value) Logger.Msg(ConsoleColor.Blue, $"GetAxisRaw - Vertical {Input.GetAxisRaw("Vertical")}, Horizontal {Input.GetAxisRaw("Horizontal")}");
+                if (debug.Value) Logger.Msg(ConsoleColor.DarkBlue, $"VRCInput - Vertical {vertical.field_Public_Single_0}, Horizontal {horizontal.field_Public_Single_0}");
+
+                if (debug.Value) { Logger.Msg(ConsoleColor.DarkGray, $"GetAxis- - Vertical {Input.GetAxis("Oculus_CrossPlatform_SecondaryThumbstickVertical")}, Horizontal {Input.GetAxis("Oculus_CrossPlatform_SecondaryThumbstickHorizontal")} _Oculus_Secondary"); }
+
+
+                //.field_Private_Single_0
+                //Oculus_CrossPlatform_SecondaryThumbstickHorizontal
+
+                if (Mathf.Abs(vertical.field_Public_Single_0) < deadZone.Value && Mathf.Abs(horizontal.field_Public_Single_0) < deadZone.Value)
                 {
                     if (imState == false) {
                         if (settleBefore.Value)
@@ -222,13 +245,13 @@ namespace ImmobilizePlayer
                         {
                             if (!WorldTypeGame)
                                 Utils.SetImmobilize(true);
-                            //else
-                                //if (debug.Value) Logger.Msg("Not Immobilizing due to GAME world");
+                            else
+                                if (debug.Value) Logger.Msg("Not Immobilizing due to GAME world");
                         }
-                        //else
-                            //if (debug.Value) Logger.Msg("Not Immobilizing due to no FBT");
+                        else
+                            if (debug.Value) Logger.Msg("Not Immobilizing due to no FBT");
                         imState = true;
-                        //if (debug.Value) Logger.Msg("No Movement");
+                        if (debug.Value) Logger.Msg("No Movement");
                         if (debugHUD.Value) rightIcon.color = new Color(1f, 0f, 0f, 0.25f);
                     }
                 }
@@ -239,7 +262,7 @@ namespace ImmobilizePlayer
                     {
                         Utils.SetImmobilize(false);
                         imState = false;
-                        //if (debug.Value) Logger.Msg("Movement && Menu not open - " + Utils.MenuOpen());
+                        if (debug.Value) Logger.Msg("Movement && Menu not open");
                         if (debugHUD.Value) rightIcon.color = new Color(0f, 1f, 0f, 0.25f);
                     }
                     //else
