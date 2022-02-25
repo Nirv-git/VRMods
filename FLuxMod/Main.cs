@@ -16,7 +16,7 @@ namespace FLuxMod
         public static MelonLogger.Instance Logger;
 
         public static MelonPreferences_Category cat;
-        public static MelonPreferences_Entry<bool> amapi_ModsFolder;
+        public static MelonPreferences_Entry<string> amapi_ModsFolder;
 
         public static MelonPreferences_Entry<float> flux_HDRClamp;
         public static MelonPreferences_Entry<float> flux_Hue;
@@ -42,7 +42,8 @@ namespace FLuxMod
             Logger = new MelonLogger.Instance("FLuxMod", ConsoleColor.DarkRed);
 
             cat = MelonPreferences.CreateCategory("FLuxMod", "FLuxMod");
-            amapi_ModsFolder = MelonPreferences.CreateEntry("FLuxMod", nameof(amapi_ModsFolder), false, "Place Action Menu in 'Mods' Sub Menu instead of 'Config' menu (Restart Required)");
+            amapi_ModsFolder = MelonPreferences.CreateEntry("FLuxMod", nameof(amapi_ModsFolder), "Options", "Folder in radial menun to place Sub Menu in (Restart Required)");
+
             flux_HDRClamp = MelonPreferences.CreateEntry("FLuxMod", nameof(flux_HDRClamp), .222f, "HDRClamp (0-1)"); //.778
             flux_Hue = MelonPreferences.CreateEntry("FLuxMod", nameof(flux_Hue), .102f, "Hue (0-1)");
 
@@ -60,6 +61,11 @@ namespace FLuxMod
             slot6Name = MelonPreferences.CreateEntry("FLuxMod", nameof(slot6Name), "SlotName", "Slot 6 Name");
             savedPrefs = MelonPreferences.CreateEntry("FLuxMod", nameof(savedPrefs), "1,0.222,0.102,0.75,0.623,0.255;2,0,0.102,0,1,0;3,0.5,0.102,0,1,0;4,0.5,0.102,0,0.75,0.15;5,0.5,0.102,0,0.10,0.25;6,0.222,0.102,0.75,0.623,0.255", "savedPrefs", "", true);
 
+            if (MelonHandler.Mods.Any(m => m.Info.Name == "UI Expansion Kit"))
+            {
+                UIX.UIXinit();
+            }
+
             loadAssets();
 
             flux_HDRClamp.OnValueChanged += OnValueChange;
@@ -70,7 +76,10 @@ namespace FLuxMod
             flux_scale.OnValueChanged += OnValueChange;
 
             CustomActionMenu.InitUi();
+
+
         }
+
 
         public static void ToggleObject()
         {
@@ -98,7 +107,6 @@ namespace FLuxMod
         { 
             if (!pauseOnValueChange && (!fluxObj?.Equals(null) ?? false))
             {
-                //TODO flip images for Colorize and HDR Clamp
                 var mat = fluxObj.GetComponent<Renderer>().material;
                 mat.SetFloat("_HDRClamp", Utils.Rescale(Utils.Invert(flux_HDRClamp.Value)));
                 mat.SetFloat("_Hue", Utils.Rescale(flux_Hue.Value));

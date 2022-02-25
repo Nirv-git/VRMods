@@ -68,10 +68,14 @@ namespace FLuxMod
             loadAssets();
             InitTextures();
 
-            if (Main.amapi_ModsFolder.Value)
-                AMUtils.AddToModsFolder("<color=#ff00ff>FLux</color>", () => AMsubMenu(), Base);
-            else
-                VRCActionMenuPage.AddSubMenu(ActionMenuPage.Options, "<color=#ff00ff>FLux</color>", () => AMsubMenu(), Base);
+            switch (Main.amapi_ModsFolder.Value)
+            {
+                case "ModsFolder" : AMUtils.AddToModsFolder("<color=#ff00ff>FLux</color>", () => AMsubMenu(), Base);  break;
+                case "Options": VRCActionMenuPage.AddSubMenu(ActionMenuPage.Options, "<color=#ff00ff>FLux</color>", () => AMsubMenu(), Base); break;
+                case "Main": VRCActionMenuPage.AddSubMenu(ActionMenuPage.Main, "<color=#ff00ff>FLux</color>", () => AMsubMenu(), Base); break;
+                case "Expression": VRCActionMenuPage.AddSubMenu(ActionMenuPage.Expression, "<color=#ff00ff>FLux</color>", () => AMsubMenu(), Base); break;
+                default: VRCActionMenuPage.AddSubMenu(ActionMenuPage.Options, "<color=#ff00ff>FLux</color>", () => AMsubMenu(), Base); break;
+            }
         }
 
         private static void AMsubMenu()

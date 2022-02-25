@@ -7,7 +7,6 @@ using UnityEngine.UI;
 using UnityEngine.XR;
 using System;
 
-
 [assembly: MelonInfo(typeof(ImmobilizePlayer.Main), "ImmobilizePlayerMod", "0.4.1", "Nirvash")]
 [assembly: MelonGame("VRChat", "VRChat")]
 
@@ -40,7 +39,6 @@ namespace ImmobilizePlayer
         public static Image rightIcon;
         public static bool WorldTypeGame = false;
         public static bool CurrentWorldChecked = false;
-
         public static VRCInput vertical;
         public static VRCInput horizontal;
 
@@ -52,14 +50,14 @@ namespace ImmobilizePlayer
             MelonPreferences.CreateCategory("ImPlaMod", "Immobilize Player Mod");
             buttonEnabled = MelonPreferences.CreateEntry<bool>("ImPlaMod", "QuickMenuButton", true, "Put Button on Quick Menu");
             movementToggle = MelonPreferences.CreateEntry<bool>("ImPlaMod", "MovementToggle", false, "Auto toggle if not moving | Only will trigger if using VR and FBT");
-            autoButtonEnabled = MelonPreferences.CreateEntry<bool>("ImPlaMod", "autoButtonEnabled", false, "Put Auto Toggle Button on Quick Menu");
+            autoButtonEnabled = MelonPreferences.CreateEntry<bool>("ImPlaMod", "autoButtonEnabled", true, "Put Auto Toggle Button on Quick Menu");
             deadZone = MelonPreferences.CreateEntry<float>("ImPlaMod", "DeadZone", 0.03f, "-Auto- Deadzone for Movement detection");
             delay = MelonPreferences.CreateEntry<float>("ImPlaMod", "delay", .001f, "-Auto- Delay between checks");
             settleBefore = MelonPreferences.CreateEntry<bool>("ImPlaMod", "settleBefore", true, "-Auto- Settle for X seconds before Immobilizing");
             settleTime = MelonPreferences.CreateEntry<float>("ImPlaMod", "settleTime", 3f, "-Auto- Time to wait for settling");
 
-            debug = MelonPreferences.CreateEntry<bool>("ImPlaMod", "debug", false, "debug");
-            debugHUD = MelonPreferences.CreateEntry<bool>("ImPlaMod", "debugHUD", false, "debugHUD");
+            debug = MelonPreferences.CreateEntry<bool>("ImPlaMod", "debug", false, "Debug messages in Console");
+            debugHUD = MelonPreferences.CreateEntry<bool>("ImPlaMod", "debugHUD", false, "Debug HUD");
 
             movementToggle.OnValueChanged += OnValueChange;
 
@@ -200,21 +198,16 @@ namespace ImmobilizePlayer
         public IEnumerator AutoSet()
         {
             ranOnce = true;
-
-            //if(!XRDevice.isPresent) yield break;
+            if(!XRDevice.isPresent) yield break;
             while (movementToggle.Value)
             {
-                if (debug.Value) { yield return new WaitForSeconds(1); Logger.Msg($"GetAxis - Vertical {Input.GetAxis("Vertical")}, Horizontal {Input.GetAxis("Horizontal")}"); }
-                if (debug.Value) { Logger.Msg(ConsoleColor.Cyan, $"GetAxis - Vertical {Input.GetAxis("Oculus_CrossPlatform_PrimaryThumbstickVertical")}, Horizontal {Input.GetAxis("Oculus_CrossPlatform_PrimaryThumbstickHorizontal")} _Oculus_Primary" ); }
-
-                if (debug.Value) Logger.Msg(ConsoleColor.Blue, $"GetAxisRaw - Vertical {Input.GetAxisRaw("Vertical")}, Horizontal {Input.GetAxisRaw("Horizontal")}");
-                if (debug.Value) Logger.Msg(ConsoleColor.DarkBlue, $"VRCInput - Vertical {vertical.field_Public_Single_0}, Horizontal {horizontal.field_Public_Single_0}");
-
-                if (debug.Value) { Logger.Msg(ConsoleColor.DarkGray, $"GetAxis- - Vertical {Input.GetAxis("Oculus_CrossPlatform_SecondaryThumbstickVertical")}, Horizontal {Input.GetAxis("Oculus_CrossPlatform_SecondaryThumbstickHorizontal")} _Oculus_Secondary"); }
-
-
-                //.field_Private_Single_0
-                //Oculus_CrossPlatform_SecondaryThumbstickHorizontal
+                if (debug.Value) { yield return new WaitForSeconds(1); 
+                    Logger.Msg($"GetAxis - Vertical {Input.GetAxis("Vertical")}, Horizontal {Input.GetAxis("Horizontal")}"); 
+                    Logger.Msg(ConsoleColor.Cyan, $"GetAxis - Vertical {Input.GetAxis("Oculus_CrossPlatform_PrimaryThumbstickVertical")}, Horizontal {Input.GetAxis("Oculus_CrossPlatform_PrimaryThumbstickHorizontal")} _Oculus_Primary" ); 
+                    Logger.Msg(ConsoleColor.Blue, $"GetAxisRaw - Vertical {Input.GetAxisRaw("Vertical")}, Horizontal {Input.GetAxisRaw("Horizontal")}");
+                    Logger.Msg(ConsoleColor.DarkBlue, $"VRCInput - Vertical {vertical.field_Public_Single_0}, Horizontal {horizontal.field_Public_Single_0}");
+                    Logger.Msg(ConsoleColor.DarkGray, $"GetAxis- - Vertical {Input.GetAxis("Oculus_CrossPlatform_SecondaryThumbstickVertical")}, Horizontal {Input.GetAxis("Oculus_CrossPlatform_SecondaryThumbstickHorizontal")} _Oculus_Secondary"); 
+                }
 
                 if (Mathf.Abs(vertical.field_Public_Single_0) < deadZone.Value && Mathf.Abs(horizontal.field_Public_Single_0) < deadZone.Value)
                 {
@@ -271,6 +264,5 @@ namespace ImmobilizePlayer
                 yield return new WaitForSeconds(delay.Value);
             }
         }
-
     }
 }
