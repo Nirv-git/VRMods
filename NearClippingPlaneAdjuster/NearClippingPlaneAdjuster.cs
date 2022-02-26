@@ -15,7 +15,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 
-[assembly: MelonInfo(typeof(NearClipPlaneAdj.NearClipPlaneAdjMod), "NearClipPlaneAdj", "1.63", "Nirvash")]
+[assembly: MelonInfo(typeof(NearClipPlaneAdj.NearClipPlaneAdjMod), "NearClipPlaneAdj", "1.64", "Nirvash")]
 [assembly: MelonGame("VRChat", "VRChat")]
 [assembly: MelonOptionalDependencies("ActionMenuApi")]
 
@@ -105,7 +105,7 @@ namespace NearClipPlaneAdj
                     while ((line = reader.ReadLine()) != null)
                     {
                         var sub = line.Split(',');
-                        blackList.Add(sub[0], new System.Tuple<bool, string>(bool.Parse(sub[1]), sub[2]));
+                        if(sub.Length == 3) blackList.Add(sub[0], new System.Tuple<bool, string>(bool.Parse(sub[1]), sub[2]));
                     }
                 }
             }
