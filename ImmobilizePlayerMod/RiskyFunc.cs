@@ -93,6 +93,7 @@ namespace ImmobilizePlayer
                                 {
                                     tagResult = true;
                                     //Main.Logger.Msg($"Found game tag in world world '{worldId}'");
+                                    Main.Logger.Msg(ConsoleColor.Yellow, $"--Will not auto Immobilize due to game world--");
                                     break;
                                 }
                             }
