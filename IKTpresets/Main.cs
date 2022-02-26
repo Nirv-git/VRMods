@@ -7,7 +7,7 @@ using UIExpansionKit.API;
 using UnityEngine.UI;
 
 [assembly: MelonGame("VRChat", "VRChat")]
-[assembly: MelonInfo(typeof(IKTpresets.Main), "IKTpresets", "0.1.5", "Nirvash", "https://github.com/Nirv-git/VRMods")]
+[assembly: MelonInfo(typeof(IKTpresets.Main), "IKTpresets", "0.1.6", "Nirvash", "https://github.com/Nirv-git/VRMods")]
 
 namespace IKTpresets
 {
@@ -51,6 +51,9 @@ namespace IKTpresets
         public static MelonPreferences_Entry<bool> NoWallFreeze;
         public static MelonPreferences_Entry<Vector3> HandAngleOffset;
         public static MelonPreferences_Entry<Vector3> HandPositionOffset;
+        public static MelonPreferences_Entry<float> ElbowGoalOffset;
+        public static MelonPreferences_Entry<float> KneeGoalOffset;
+        public static MelonPreferences_Entry<float> ChestGoalOffset;
 
         public enum IgnoreAnimationsModeEnum
         {
@@ -69,7 +72,7 @@ namespace IKTpresets
             ImprovedWingspan
         }
 
-        private static Transform butt, buttKeyboard;
+        private static Transform butt, butt2, butt3, buttKeyboard;
         private static string tempString = "";
         public static MelonPreferences_Category cat;
         public static MelonPreferences_Entry<bool> saveWithEveryChange;
@@ -95,8 +98,10 @@ namespace IKTpresets
                     (nameof(IgnoreAnimationsModeEnum.HandAndHead), "Ignore head and hands"),
                     //(nameof(IgnoreAnimationsModeEnum.All), "Ignore all (always slide around)")
                 });
-            savedPrefs = MelonPreferences.CreateEntry("IKTpresets", nameof(savedPrefs), "1,true,true,true,false,true,10,30,30,30,15,2,15,2,ImprovedWingspan,1.1,false,0,-105,0,0.015,-0.005,0;2,true,true,true,false,true,10,30,30,30,15,2,15,2,ImprovedWingspan,1.1,false,0,-105,0,0.015,-0.005,0;3,true,true,true,false,true,10,30,30,30,15,2,15,2,ImprovedWingspan,1.1,false,0,-105,0,0.015,-0.005,0;4,true,true,true,false,true,10,30,30,30,15,2,15,2,ImprovedWingspan,1.1,false,0,-105,0,0.015,-0.005,0;5,true,true,true,false,true,10,30,30,30,15,2,15,2,ImprovedWingspan,1.1,false,0,-105,0,0.015,-0.005,0;6,true,true,true,false,true,10,30,30,30,15,2,15,2,ImprovedWingspan,1.1,false,0,-105,0,0.015,-0.005,0;7,true,true,true,false,true,10,30,30,30,15,2,15,2,ImprovedWingspan,1.1,false,0,-105,0,0.015,-0.005,0;8,true,true,true,false,true,10,30,30,30,15,2,15,2,ImprovedWingspan,1.1,false,0,-105,0,0.015,-0.005,0;9,true,true,true,false,true,10,30,30,30,15,2,15,2,ImprovedWingspan,1.1,false,0,-105,0,0.015,-0.005,0;10,true,true,true,false,true,10,30,30,30,15,2,15,2,ImprovedWingspan,1.1,false,0,-105,0,0.015,-0.005,0;11,true,true,true,false,true,10,30,30,30,15,2,15,2,ImprovedWingspan,1.1,false,0,-105,0,0.015,-0.005,0;12,true,true,true,false,true,10,30,30,30,15,2,15,2,ImprovedWingspan,1.1,false,0,-105,0,0.015,-0.005,0;13,true,true,true,false,true,10,30,30,30,15,2,15,2,ImprovedWingspan,1.1,false,0,-105,0,0.015,-0.005,0;14,true,true,true,false,true,10,30,30,30,15,2,15,2,ImprovedWingspan,1.1,false,0,-105,0,0.015,-0.005,0;15,true,true,true,false,true,10,30,30,30,15,2,15,2,ImprovedWingspan,1.1,false,0,-105,0,0.015,-0.005,0;16,true,true,true,false,true,10,30,30,30,15,2,15,2,ImprovedWingspan,1.1,false,0,-105,0,0.015,-0.005,0", "savedPrefs", "", true);
+            savedPrefs = MelonPreferences.CreateEntry("IKTpresets", nameof(savedPrefs), "1,True,True,True,False,True,10,30.,30.,30.,35.,3.6,15.,2.,ImprovedWingspan,1.1,False,0.,-105.,0.,0.015,-0.005,0.,0.1,0.1,0.5;2,True,True,True,False,True,10,30.,30.,30.,15.,2.,15.,2.,ImprovedWingspan,1.1,False,0.,-105.,0.,0.015,-0.005,0.,0.1,0.1,0.5;3,True,True,True,False,True,10,30.,30.,30.,15.,2.,15.,2.,ImprovedWingspan,1.1,False,0.,-105.,0.,0.015,-0.005,0.,0.1,0.1,0.5;4,True,True,True,False,True,10,30.,30.,30.,15.,2.,15.,2.,ImprovedWingspan,1.1,False,0.,-105.,0.,0.015,-0.005,0.,0.1,0.1,0.5;5,True,True,True,False,True,10,30.,30.,30.,15.,2.,15.,2.,ImprovedWingspan,1.1,False,0.,-105.,0.,0.015,-0.005,0.,0.1,0.1,0.5;6,True,True,True,False,True,10,30.,30.,30.,15.,2.,15.,2.,ImprovedWingspan,1.1,False,0.,-105.,0.,0.015,-0.005,0.,0.1,0.1,0.5;7,True,True,True,False,True,10,30.,30.,30.,15.,2.,15.,2.,ImprovedWingspan,1.1,False,0.,-105.,0.,0.015,-0.005,0.,0.1,0.1,0.5;8,True,True,True,False,True,10,30.,30.,30.,15.,2.,15.,2.,ImprovedWingspan,1.1,False,0.,-105.,0.,0.015,-0.005,0.,0.1,0.1,0.5;9,True,True,True,False,True,10,30.,30.,30.,15.,2.,15.,2.,ImprovedWingspan,1.1,False,0.,-105.,0.,0.015,-0.005,0.,0.1,0.1,0.5;10,True,True,True,False,True,10,30.,30.,30.,15.,2.,15.,2.,ImprovedWingspan,1.1,False,0.,-105.,0.,0.015,-0.005,0.,0.1,0.1,0.5;11,True,True,True,False,True,10,30.,30.,30.,15.,2.,15.,2.,ImprovedWingspan,1.1,False,0.,-105.,0.,0.015,-0.005,0.,0.1,0.1,0.5;12,True,True,True,False,True,10,30.,30.,30.,15.,2.,15.,2.,ImprovedWingspan,1.1,False,0.,-105.,0.,0.015,-0.005,0.,0.1,0.1,0.5;13,True,True,True,False,True,10,30.,30.,30.,15.,2.,15.,2.,ImprovedWingspan,1.1,False,0.,-105.,0.,0.015,-0.005,0.,0.1,0.1,0.5;14,True,True,True,False,True,10,30.,30.,30.,15.,2.,15.,2.,ImprovedWingspan,1.1,False,0.,-105.,0.,0.015,-0.005,0.,0.1,0.1,0.5;15,True,True,True,False,True,10,30.,30.,30.,15.,2.,15.,2.,ImprovedWingspan,1.1,False,0.,-105.,0.,0.015,-0.005,0.,0.1,0.1,0.5;16,True,True,True,False,True,10,30.,30.,30.,15.,2.,15.,2.,ImprovedWingspan,1.1,False,0.,-105.,0.,0.015,-0.005,0.,0.1,0.1,0.5", "savedPrefs", "", true);
             savedPrefNames = MelonPreferences.CreateEntry("IKTpresets", nameof(savedPrefNames), "1,N/A;2,N/A;3,N/A;4,N/A;5,N/A;6,N/A;7,N/A;8,N/A;9,N/A;10,N/A;11,N/A;12,N/A;13,N/A;14,N/A;15,N/A;16,N/A", "savedSlotNames", "", true);
+
+            SaveSlots.MigrateData();
 
             if (MelonHandler.Mods.Any(m => m.Info.Name == "IKTweaks"))
             {
@@ -160,6 +165,10 @@ namespace IKTpresets
 
             HandAngleOffset = category.GetEntry<Vector3>(nameof(HandAngleOffset));//  DefaultHandAngle, "Hand angle offset", null, true);
             HandPositionOffset = category.GetEntry<Vector3>(nameof(HandPositionOffset));//  DefaultHandOffset, "Hand position offset", null, true);
+
+            ElbowGoalOffset = category.GetEntry<float>(nameof(ElbowGoalOffset));//, 0.1f, "Elbows bend goal offset (0-1)");
+            KneeGoalOffset = category.GetEntry<float>(nameof(KneeGoalOffset));//, 0.1f, "Knees bend goal offset (0-1)");
+            ChestGoalOffset = category.GetEntry<float>(nameof(ChestGoalOffset));//, 0.5f, "Chest bend goal offset (0-1)");
         }
 
         public void PresetsMain()
@@ -193,7 +202,7 @@ namespace IKTpresets
             menu.AddSpacer();
 
             var slotNames = SaveSlots.GetSavedSlotNames();
-            foreach (System.Collections.Generic.KeyValuePair<int, System.Tuple<System.Tuple<bool, bool, bool, bool, bool>, System.Tuple<int, float, float, float, float, float, float>, System.Tuple<float, string, float, bool, Vector3, Vector3>>>
+            foreach (System.Collections.Generic.KeyValuePair<int, System.Tuple<System.Tuple<bool, bool, bool, bool, bool>, System.Tuple<int, float, float, float, float, float, float>, System.Tuple<float, string, float, bool, Vector3, Vector3>, System.Tuple<float, float, float>>>
                 slot in SaveSlots.GetSaved())
             {
                 //Logger.Msg($"{slot.Key}");
@@ -705,7 +714,91 @@ namespace IKTpresets
             {
                 PresetsMain();
             });
-            menu.AddSpacer();
+
+            menu.AddSimpleButton($"Elbow/Knee/Chest GoalOffset\n{ElbowGoalOffset.Value} {KneeGoalOffset.Value} {ChestGoalOffset.Value}", () =>
+            {
+                string label()
+                {
+                    return $"Elbow GoalOffset\n{ElbowGoalOffset.Value}";
+                }
+                string label2()
+                {
+                    return $"Knee GoalOffset\n{KneeGoalOffset.Value}";
+                }
+                string label3()
+                {
+                    return $"Chest GoalOffset\n{ChestGoalOffset.Value}";
+                }
+                var menu2 = ExpansionKitApi.CreateCustomQuickMenuPage(LayoutDescription.QuickMenu4Columns);
+                menu2.AddLabel(label(), (button) => butt = button.transform);
+                menu2.AddSimpleButton($"-", () =>
+                {
+                    ElbowGoalOffset.Value -= .05f;
+                    if (saveWithEveryChange.Value) MelonPreferences.Save();
+                    butt.GetComponentInChildren<Text>().text = label();
+                });
+                menu2.AddSimpleButton($"0.1", () =>
+                {
+                    ElbowGoalOffset.Value = 0.1f;
+                    if (saveWithEveryChange.Value) MelonPreferences.Save();
+                    butt.GetComponentInChildren<Text>().text = label();
+                });
+                menu2.AddSimpleButton($"+", () =>
+                {
+                    ElbowGoalOffset.Value += .05f;
+                    if (saveWithEveryChange.Value) MelonPreferences.Save();
+                    butt.GetComponentInChildren<Text>().text = label();
+                });
+                //
+                menu2.AddLabel(label2(), (button) => butt2 = button.transform);
+                menu2.AddSimpleButton($"-", () =>
+                {
+                    KneeGoalOffset.Value -= .05f;
+                    if (saveWithEveryChange.Value) MelonPreferences.Save();
+                    butt2.GetComponentInChildren<Text>().text = label2();
+                });
+                menu2.AddSimpleButton($"0.1", () =>
+                {
+                    KneeGoalOffset.Value = 0.1f;
+                    if (saveWithEveryChange.Value) MelonPreferences.Save();
+                    butt2.GetComponentInChildren<Text>().text = label2();
+                });
+                menu2.AddSimpleButton($"+", () =>
+                {
+                    KneeGoalOffset.Value += .05f;
+                    if (saveWithEveryChange.Value) MelonPreferences.Save();
+                    butt2.GetComponentInChildren<Text>().text = label2();
+                });
+                //
+                menu2.AddLabel(label3(), (button) => butt3 = button.transform);
+                menu2.AddSimpleButton($"-", () =>
+                {
+                    ChestGoalOffset.Value -= .05f;
+                    if (saveWithEveryChange.Value) MelonPreferences.Save();
+                    butt3.GetComponentInChildren<Text>().text = label3();
+                });
+                menu2.AddSimpleButton($"0.5", () =>
+                {
+                    ChestGoalOffset.Value = 0.5f;
+                    if (saveWithEveryChange.Value) MelonPreferences.Save();
+                    butt3.GetComponentInChildren<Text>().text = label3();
+                });
+                menu2.AddSimpleButton($"+", () =>
+                {
+                    ChestGoalOffset.Value += .05f;
+                    if (saveWithEveryChange.Value) MelonPreferences.Save();
+                    butt3.GetComponentInChildren<Text>().text = label3();
+                });
+                //
+                menu2.AddSimpleButton($"<-Back", () =>
+                {
+                    EditMenu();
+                });
+                menu2.AddLabel("Sensible range of values is between 0 and 1.");
+
+                menu2.Show();
+            });
+
             menu.AddSpacer();
             menu.AddSimpleButton($"Help Docs", () =>
             {
@@ -734,6 +827,7 @@ namespace IKTpresets
             menu.AddLabel("* Improved wingspan adjustment factor - your wingspan is adjusted by this factor in 'Improved wingspan' scaling mode. If you consistently get avatar arms too long/short, consider tweaking this a tiny bit (to like 1.05 or 1.15)");
             menu.AddLabel("* Feet stick to ground - uncheck if you want your feet (and the rest of your avatar) to be unable to leave the ground, like in ol' good times");
             menu.AddLabel("* Hand angles/offsets (found in VRChat Settings menu -> left blue panel -> More IKTweaks -> Adjust hand angles/offsets) - you can configure how avatar hands are positioned relative to controllers. Defaults were tuned for Index controllers, but should be applicable to most other controllers too.");
+            menu.AddLabel("* Elbow/knee/chest bend goal offset - controls how far bend goal targets will be away from the actual joint. Lower values should produce better precision with bent joint, higher values - better stability with straight joint. Sensible range of values is between 0 and 1.");
 
             menu.AddSimpleButton($"Open Full ReadMe on Github", () =>
             {
@@ -769,7 +863,7 @@ namespace IKTpresets
             storedMenu.AddSpacer();
             storedMenu.AddSpacer();
 
-            foreach (System.Collections.Generic.KeyValuePair<int, System.Tuple < System.Tuple<bool, bool, bool, bool, bool>, System.Tuple<int, float, float, float, float, float, float>, System.Tuple<float, string, float, bool, Vector3, Vector3> >>
+            foreach (System.Collections.Generic.KeyValuePair<int, System.Tuple < System.Tuple<bool, bool, bool, bool, bool>, System.Tuple<int, float, float, float, float, float, float>, System.Tuple<float, string, float, bool, Vector3, Vector3>, System.Tuple<float, float, float>>>
                 slot in SaveSlots.GetSaved())
             {
                 string label =  $"Slot: {slot.Key}\n{slotNames[slot.Key]}";
