@@ -7,7 +7,7 @@ using UnityEngine.UI;
 using UnityEngine.XR;
 using System;
 
-[assembly: MelonInfo(typeof(ImmobilizePlayer.Main), "ImmobilizePlayerMod", "0.4.1", "Nirvash")]
+[assembly: MelonInfo(typeof(ImmobilizePlayer.Main), "ImmobilizePlayerMod", "0.4.3", "Nirvash")]
 [assembly: MelonGame("VRChat", "VRChat")]
 
 namespace ImmobilizePlayer
@@ -18,6 +18,7 @@ namespace ImmobilizePlayer
 
         public static MelonPreferences_Entry<bool> buttonEnabled;
         public static MelonPreferences_Entry<bool> autoButtonEnabled;
+        public static MelonPreferences_Entry<bool> allowAutoForNonFBT;
         public static MelonPreferences_Entry<bool> movementToggle;
         public static MelonPreferences_Entry<float> deadZone;
         public static MelonPreferences_Entry<float> delay;
@@ -49,8 +50,9 @@ namespace ImmobilizePlayer
 
             MelonPreferences.CreateCategory("ImPlaMod", "Immobilize Player Mod");
             buttonEnabled = MelonPreferences.CreateEntry<bool>("ImPlaMod", "QuickMenuButton", true, "Put Button on Quick Menu");
-            movementToggle = MelonPreferences.CreateEntry<bool>("ImPlaMod", "MovementToggle", false, "Auto toggle if not moving | Only will trigger if using VR and FBT");
+            movementToggle = MelonPreferences.CreateEntry<bool>("ImPlaMod", "MovementToggle", false, "Auto toggle if not moving | Only will trigger if using VR");
             autoButtonEnabled = MelonPreferences.CreateEntry<bool>("ImPlaMod", "autoButtonEnabled", true, "Put Auto Toggle Button on Quick Menu");
+            allowAutoForNonFBT = MelonPreferences.CreateEntry<bool>("ImPlaMod", "allowAutoForNonFBT", false, "-Auto- Allow for half body VR players");
             deadZone = MelonPreferences.CreateEntry<float>("ImPlaMod", "DeadZone", 0.03f, "-Auto- Deadzone for Movement detection");
             delay = MelonPreferences.CreateEntry<float>("ImPlaMod", "delay", .001f, "-Auto- Delay between checks");
             settleBefore = MelonPreferences.CreateEntry<bool>("ImPlaMod", "settleBefore", true, "-Auto- Settle for X seconds before Immobilizing");
@@ -234,7 +236,7 @@ namespace ImmobilizePlayer
                             }
                             //if (debug.Value) Logger.Msg(ConsoleColor.Yellow, "End of settleBefore.Value");
                         }
-                        if (Utils.LocalPlayerFBT()) //Don't do this on users without FBT, as it will look funny
+                        if (allowAutoForNonFBT.Value || Utils.LocalPlayerFBT()) //Don't do this on users without FBT, as it will look funny
                         {
                             if (!WorldTypeGame)
                                 Utils.SetImmobilize(true);
