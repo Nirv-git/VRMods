@@ -5,7 +5,7 @@ using System.Collections;
 using System;
 
 
-[assembly: MelonModInfo(typeof(DisableControllerOverlay.DisableControllerOverlayMod), "DisableControllerOverlay", "0.9.5", "Nirvash")]
+[assembly: MelonModInfo(typeof(DisableControllerOverlay.DisableControllerOverlayMod), "DisableControllerOverlay", "0.9.6", "Nirvash")]
 [assembly: MelonModGame("VRChat", "VRChat")]
 [assembly: MelonColor(ConsoleColor.DarkYellow)]
 
@@ -69,13 +69,15 @@ namespace DisableControllerOverlay
         public IEnumerator OnLoad()
         {
             if (!disableToolTipsOnLoad.Value) yield break;
-            Logger.Msg("Waiting for Controllers to Init");
-            while (GameObject.Find("_Application/TrackingVolume/TrackingSteam(Clone)/SteamCamera/[CameraRig]/Controller (left)") == null)
-                yield return new WaitForSeconds(1f);
-            Logger.Msg("Controllers Init'ed");
+            Logger.Msg("Waiting for QM first open");
+            //while (GameObject.Find("_Application/TrackingVolume/TrackingSteam(Clone)/SteamCamera/[CameraRig]/Controller (left)") == null)
+            while (GameObject.Find("/UserInterface/Canvas_QuickMenu(Clone)/Container/Window/MicButton") == null) //Why wait for the MicButton, because I use this in other mods so I only need to fix one thing if it breaks in the future! Also you can't open the camera without going through the QM
+                yield return new WaitForSeconds(1f); //Also because before if we checked for the Controller container to init, and people started their controllers after starting the game, it wouldn't disable their overlays, cause they hadn't been created yet. I assume now people would have their controllers on before opening the QM
+            Logger.Msg("QM Opened | Controllers Disabled");
             disableToolTips.Value = true;
             ToggleToolTips(false);
         }
+
 
 
         public void disableChange(bool oldValue, bool newValue)
@@ -125,6 +127,9 @@ namespace DisableControllerOverlay
         }
     }
 }
+
+
+
 
 namespace UIExpansionKit.API
 {
