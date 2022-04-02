@@ -47,7 +47,7 @@ namespace LocalLightMod
                 stringChars[i] = chars[random.Next(chars.Length)];
             }
             string temp = new String(stringChars);
-            //MelonLoader.MelonLogger.Msg("RandomString" + temp);
+            //Main.Logger.Msg("RandomString" + temp);
             return temp;
         }
 

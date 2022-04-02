@@ -12,6 +12,7 @@ namespace LocalLightMod
 {
     public class Main : MelonMod
     {
+        public static MelonLogger.Instance Logger;
         public static class Config
         {
             static public string name = "DefaultName";
@@ -47,6 +48,8 @@ namespace LocalLightMod
 
         public override void OnApplicationStart()
         {
+            Logger = new MelonLogger.Instance("LocalLightMod");
+
             cat = MelonPreferences.CreateCategory(catagory, "Local Light Mod");
 
             loadDefaults = MelonPreferences.CreateEntry(catagory, nameof(loadDefaults), false, "Load Slot 1 as Default");
@@ -171,12 +174,12 @@ namespace LocalLightMod
         {
             if (!obj?.Equals(null) ?? false)
             {
-                //MelonLogger.Msg("Removing Object");
-                if(clearAsGo) lightList.Remove(obj);
+                //Logger.Msg("Removing Object");
+                if (clearAsGo) lightList.Remove(obj);
                 UnityEngine.Object.Destroy(obj);
                 if (textDic.TryGetValue(obj, out Texture2D tex))
                 {
-                    //MelonLogger.Msg("Removing Texture");
+                    //Logger.Msg("Removing Texture");
                     textDic.Remove(obj);
                     if (!tex?.Equals(null) ?? false)
                         UnityEngine.Object.Destroy(tex);

@@ -15,7 +15,7 @@ namespace LocalLightMod
         {
             System.Drawing.Font font = Control.DefaultFont;
             try { font = new System.Drawing.Font("Arial", 60, System.Drawing.FontStyle.Bold); }
-            catch { MelonLogger.Msg("You dont have Arial!"); }
+            catch { Main.Logger.Msg("You dont have Arial!"); }
             System.Drawing.Color textColor = System.Drawing.Color.White;
             System.Drawing.Color backColor = System.Drawing.Color.Black;
 
