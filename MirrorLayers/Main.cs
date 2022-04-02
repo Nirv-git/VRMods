@@ -7,7 +7,7 @@ using VRC.SDKBase;
 using UnhollowerRuntimeLib;
 using System.Collections.Generic;
 
-[assembly: MelonInfo(typeof(MirrorLayers.Main), "MirrorLayers", "0.3", "Nirvash")]
+[assembly: MelonInfo(typeof(MirrorLayers.Main), "MirrorLayers", "0.3.1", "Nirvash")]
 [assembly: MelonGame("VRChat", "VRChat")]
 
 namespace MirrorLayers
@@ -19,7 +19,7 @@ namespace MirrorLayers
         {
             category.CreateEntry<bool>("MirrorQMButt", false, "MirrorLayers Button on QuickMenu");
             category.CreateEntry<bool>("MirrorBigButt", true, "MirrorLayers Button on Worlds menu");
-            defaultMask = category.CreateEntry<int>("DefaultMask", 0, "Default Mirror Layer Mask");
+            defaultMask = category.CreateEntry<int>("DefaultMask", -529441, "Default Mirror Layer Mask");
             setMaskOnJoin = category.CreateEntry<bool>("SetDefaultOnJoin", false, "Set Default Layer Mask On World Join");
             OnPreferencesSaved();
 
@@ -53,8 +53,10 @@ namespace MirrorLayers
             else mirrorLayerMenu.AddLabel($"{GetHierarchyPath(mirror.gameObject.transform)}");
 
             mirrorLayerMenu.AddSimpleButton($"View Mirrors", () => { ViewMirrorLayers(useBigMenu); });
-            mirrorLayerMenu.AddSimpleButton($"Enable All", () => { SetSingleLayerOnMirrors(0, 5, mirror); });
-            mirrorLayerMenu.AddSimpleButton($"Disable All", () => { SetSingleLayerOnMirrors(0, 6, mirror); });
+            if (mirror is null) mirrorLayerMenu.AddSimpleButton($"Enable All", () => { SetSingleLayerOnMirrors(0, 5, mirror); });
+            else mirrorLayerMenu.AddSimpleButton($"Enable All", () => { SetSingleLayerOnMirrors(0, 5, mirror); UpdateButtons(mirror.m_ReflectLayers); });
+            if (mirror is null) mirrorLayerMenu.AddSimpleButton($"Disable All", () => { SetSingleLayerOnMirrors(0, 6, mirror); });
+            else mirrorLayerMenu.AddSimpleButton($"Disable All", () => { SetSingleLayerOnMirrors(0, 6, mirror); UpdateButtons(mirror.m_ReflectLayers); });
 
             foreach (KeyValuePair<int, string> entry in layerList)
             {
@@ -185,7 +187,7 @@ namespace MirrorLayers
                         case 1: vrcMirrorReflection.m_ReflectLayers = vrcMirrorReflection.m_ReflectLayers.value | (1 << layer); break; //Add Layer
                         case 5: vrcMirrorReflection.m_ReflectLayers = -1; break; //All
                         case 6: vrcMirrorReflection.m_ReflectLayers = 0; break; //None
-                        case 10: vrcMirrorReflection.m_ReflectLayers = -1 & ~UiLayer & ~UiMenuLayer & ~PlayerLocalLayer; break; //Full
+                        case 10: vrcMirrorReflection.m_ReflectLayers = -1 & ~UiLayer & ~UiMenuLayer & ~PlayerLocalLayer & ~UiCamLayer; break; //Full
                         case 11: vrcMirrorReflection.m_ReflectLayers = PlayerLayer | MirrorReflectionLayer; break; // Opt
                         default: MelonLogger.Msg(ConsoleColor.Red, "SetSingleLayerOnMirrors hit default case in Switch - Something is wrong"); break;
                     }
@@ -261,7 +263,7 @@ namespace MirrorLayers
                 {16, "StereoRight"},
                 {17, "Walkthrough"},
                 {18, "MirrorReflection*"},
-                {19, "reserved2"},
+                {19, "reserved2(UI)*"},
                 {20, "reserved3"},
                 {21, "reserved4"},
                 {22, "user0"},
@@ -317,6 +319,7 @@ namespace MirrorLayers
         private static int UiLayer = 1 << 5;
         private static int UiMenuLayer = 1 << 12;
         private static int MirrorReflectionLayer = 1 << 18;
+        private static int UiCamLayer = 1 << 19;
         //public static int reserved2 = 1 << 19;
         //private static int optMirrorMask = PlayerLayer | MirrorReflectionLayer;
         //private static int fullMirrorMask = -1 & ~UiLayer & ~UiMenuLayer & ~PlayerLocalLayer;
