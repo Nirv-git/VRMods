@@ -7,7 +7,7 @@ using UnityEngine.UI;
 using UnityEngine.XR;
 using System;
 
-[assembly: MelonInfo(typeof(ImmobilizePlayer.Main), "ImmobilizePlayerMod", "0.4.3", "Nirvash")]
+[assembly: MelonInfo(typeof(ImmobilizePlayer.Main), "ImmobilizePlayerMod", "0.4.4", "Nirvash")]
 [assembly: MelonGame("VRChat", "VRChat")]
 
 namespace ImmobilizePlayer
@@ -19,6 +19,7 @@ namespace ImmobilizePlayer
         public static MelonPreferences_Entry<bool> buttonEnabled;
         public static MelonPreferences_Entry<bool> autoButtonEnabled;
         public static MelonPreferences_Entry<bool> allowAutoForNonFBT;
+        public static MelonPreferences_Entry<bool> allowAutoForFBTnoIKT;
         public static MelonPreferences_Entry<bool> movementToggle;
         public static MelonPreferences_Entry<float> deadZone;
         public static MelonPreferences_Entry<float> delay;
@@ -42,6 +43,7 @@ namespace ImmobilizePlayer
         public static bool CurrentWorldChecked = false;
         public static VRCInput vertical;
         public static VRCInput horizontal;
+        public bool qmButtOveride = false;
 
 
         public override void OnApplicationStart()
@@ -53,6 +55,7 @@ namespace ImmobilizePlayer
             movementToggle = MelonPreferences.CreateEntry<bool>("ImPlaMod", "MovementToggle", false, "Auto toggle if not moving | Only will trigger if using VR");
             autoButtonEnabled = MelonPreferences.CreateEntry<bool>("ImPlaMod", "autoButtonEnabled", true, "Put Auto Toggle Button on Quick Menu");
             allowAutoForNonFBT = MelonPreferences.CreateEntry<bool>("ImPlaMod", "allowAutoForNonFBT", false, "-Auto- Allow for half body VR players");
+            allowAutoForFBTnoIKT = MelonPreferences.CreateEntry<bool>("ImPlaMod", "allowAutoForFBTnoIKT", false, "-Auto- Allow for FBT players without IKTweaks (Not recommened, will cause Chest bone issues)");
             deadZone = MelonPreferences.CreateEntry<float>("ImPlaMod", "DeadZone", 0.03f, "-Auto- Deadzone for Movement detection");
             delay = MelonPreferences.CreateEntry<float>("ImPlaMod", "delay", .001f, "-Auto- Delay between checks");
             settleBefore = MelonPreferences.CreateEntry<bool>("ImPlaMod", "settleBefore", true, "-Auto- Settle for X seconds before Immobilizing");
@@ -83,6 +86,7 @@ namespace ImmobilizePlayer
             ExpansionKitApi.GetExpandedMenu(ExpandedMenu.QuickMenu).AddToggleButton("Immobilize", (action) =>
             {
                 imState = action;
+                qmButtOveride = action;
                 Utils.SetImmobilize(action);
             }, () => false, (button) => { buttonQM = button; button.gameObject.SetActive(buttonEnabled.Value); });
             ExpansionKitApi.GetExpandedMenu(ExpandedMenu.QuickMenu).AddToggleButton("Immobilize Auto Toggle", (action) =>
@@ -142,6 +146,7 @@ namespace ImmobilizePlayer
             switch (buildIndex)
             {
                 case -1:
+                    qmButtOveride = false;
                     WorldTypeGame = false;
                     CurrentWorldChecked = false;
                     if (movementToggle.Value) MelonCoroutines.Start(RiskFunct.CheckWorld());
@@ -236,18 +241,27 @@ namespace ImmobilizePlayer
                             }
                             //if (debug.Value) Logger.Msg(ConsoleColor.Yellow, "End of settleBefore.Value");
                         }
-                        if (allowAutoForNonFBT.Value || Utils.LocalPlayerFBT()) //Don't do this on users without FBT, as it will look funny
-                        {
-                            if (!WorldTypeGame)
-                                Utils.SetImmobilize(true);
+                        if (allowAutoForNonFBT.Value || Utils.LocalPlayerFBT()) //Don't do this on users without FBT by default, as it can look funny
+                        {  
+                            if (!Utils.LocalPlayerFBT() || ( Utils.LocalPlayerFBT() && (Utils.IKTweaksEnabled() || allowAutoForFBTnoIKT.Value)))
+                            {  //If FBT also require IKTweaks to be enabled, else your chest bone will get screwed up
+                                if (!WorldTypeGame)
+                                {
+                                    Utils.SetImmobilize(true);
+                                    if (debugHUD.Value) rightIcon.color = new Color(1f, 0f, 0f, 0.25f);
+                                }
+                                else
+                                if (debug.Value) Logger.Msg(ConsoleColor.Green, "Not Immobilizing due to GAME world");
+                            }
                             else
-                                if (debug.Value) Logger.Msg("Not Immobilizing due to GAME world");
+                                if (debug.Value) Logger.Msg(ConsoleColor.Green, "Not Immobilizing due FBT in use and IKTweaks not enabled (overide isn't enabled)\n" +
+                                $"LocalPlayerFBT {Utils.LocalPlayerFBT()} || IKTweaksEnabled {Utils.IKTweaksEnabled()} || allowAutoForFBTnoIKT {allowAutoForFBTnoIKT.Value}");
                         }
                         else
-                            if (debug.Value) Logger.Msg("Not Immobilizing due to no FBT");
+                            if (debug.Value) Logger.Msg(ConsoleColor.Green, "Not Immobilizing due to no FBT (override isn't enabled)\n" +
+                                $"LocalPlayerFBT {Utils.LocalPlayerFBT()} || allowAutoForNonFBT {allowAutoForNonFBT.Value} || ");
                         imState = true;
-                        if (debug.Value) Logger.Msg("No Movement");
-                        if (debugHUD.Value) rightIcon.color = new Color(1f, 0f, 0f, 0.25f);
+                        if (debug.Value) Logger.Msg(ConsoleColor.Green, "No Movement");
                     }
                 }
                 else
@@ -255,10 +269,15 @@ namespace ImmobilizePlayer
                     waitingToSettle = false;
                     if (!Utils.MenuOpen() && imState == true)
                     {
-                        Utils.SetImmobilize(false);
-                        imState = false;
-                        if (debug.Value) Logger.Msg("Movement && Menu not open");
-                        if (debugHUD.Value) rightIcon.color = new Color(0f, 1f, 0f, 0.25f);
+                        if (debug.Value) Logger.Msg(ConsoleColor.Green, "Movement && Menu not open");
+                        if (!qmButtOveride)
+                        {
+                            Utils.SetImmobilize(false);
+                            imState = false;
+                            if (debugHUD.Value) rightIcon.color = new Color(0f, 1f, 0f, 0.25f);
+                        }
+                        else
+                            if (debug.Value) Logger.Msg(ConsoleColor.Green, "QM Immobilize button set, not auto unImmobilizing");
                     }
                     //else
                         //if (debug.Value) Logger.Msg("Movement && Menu OPEN || imState = - " + Utils.MenuOpen());

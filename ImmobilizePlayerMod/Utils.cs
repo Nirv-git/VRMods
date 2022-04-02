@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MelonLoader;
 
 namespace ImmobilizePlayer
 {
@@ -25,6 +26,15 @@ namespace ImmobilizePlayer
         public static void SetImmobilize(bool value)
         {
             VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCPlayerApi_0.Immobilize(value);
+        }
+
+        public static bool IKTweaksEnabled()
+        {
+            if (MelonHandler.Mods.Any(m => m.Info.Name == "IKTweaks"))
+            {
+                return MelonPreferences.GetEntryValue<bool>("IkTweaks", "FullBodyVrIk");
+            }
+            return false;
         }
 
     }
