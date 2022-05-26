@@ -7,7 +7,7 @@ using UnityEngine.UI;
 using UnityEngine.XR;
 using System;
 
-[assembly: MelonInfo(typeof(ImmobilizePlayer.Main), "ImmobilizePlayerMod", "0.4.4", "Nirvash")]
+[assembly: MelonInfo(typeof(ImmobilizePlayer.Main), "ImmobilizePlayerMod", "0.4.5", "Nirvash")]
 [assembly: MelonGame("VRChat", "VRChat")]
 
 namespace ImmobilizePlayer
@@ -55,7 +55,7 @@ namespace ImmobilizePlayer
             movementToggle = MelonPreferences.CreateEntry<bool>("ImPlaMod", "MovementToggle", false, "Auto toggle if not moving | Only will trigger if using VR");
             autoButtonEnabled = MelonPreferences.CreateEntry<bool>("ImPlaMod", "autoButtonEnabled", true, "Put Auto Toggle Button on Quick Menu");
             allowAutoForNonFBT = MelonPreferences.CreateEntry<bool>("ImPlaMod", "allowAutoForNonFBT", false, "-Auto- Allow for half body VR players");
-            allowAutoForFBTnoIKT = MelonPreferences.CreateEntry<bool>("ImPlaMod", "allowAutoForFBTnoIKT", false, "-Auto- Allow for FBT players without IKTweaks (Not recommened, will cause Chest bone issues)");
+            allowAutoForFBTnoIKT = MelonPreferences.CreateEntry<bool>("ImPlaMod", "allowAutoForFBTnoIKT2", true, "-Auto- Allow for FBT players without IKTweaks");
             deadZone = MelonPreferences.CreateEntry<float>("ImPlaMod", "DeadZone", 0.03f, "-Auto- Deadzone for Movement detection");
             delay = MelonPreferences.CreateEntry<float>("ImPlaMod", "delay", .001f, "-Auto- Delay between checks");
             settleBefore = MelonPreferences.CreateEntry<bool>("ImPlaMod", "settleBefore", true, "-Auto- Settle for X seconds before Immobilizing");
@@ -190,7 +190,7 @@ namespace ImmobilizePlayer
         }
         private void CreateIndicators()
         {
-            Transform hud = GameObject.Find("UnscaledUI/HudContent").transform;
+            Transform hud = GameObject.Find("UnscaledUI/HudContent_Old").transform;
             GameObject iconTemplate = hud.transform.Find("Hud/AFK/Icon").gameObject;
 
             rightIcon = UnityEngine.Object.Instantiate(iconTemplate, iconTemplate.transform, true).GetComponent<Image>();
