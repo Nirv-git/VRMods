@@ -5,7 +5,7 @@ using UnityEngine;
 using VRC.SDKBase;
 
 
-[assembly: MelonModInfo(typeof(PlayerSpeedAdjSlower.PlayerSpeedAdjSlowerMod), "PlayerSpeedAdjSlower", "1.33", "Nirvash")]
+[assembly: MelonModInfo(typeof(PlayerSpeedAdjSlower.PlayerSpeedAdjSlowerMod), "PlayerSpeedAdjSlower", "1.34", "Nirvash")]
 [assembly: MelonModGame("VRChat", "VRChat")]
 
 //_originalWalkSpeed = locoCtrl.field_Public_Single_2;
@@ -20,8 +20,10 @@ namespace PlayerSpeedAdjSlower
         float PlayerSpeedValue = 2f;
         public override void OnApplicationStart()
         {
-            
-            ExpansionKitApi.GetExpandedMenu(ExpandedMenu.SettingsMenu).AddSimpleButton("Adj Speed", ShowAdjSpeedMenu);
+
+            //ExpansionKitApi.GetExpandedMenu(ExpandedMenu.SettingsMenu).AddSimpleButton("Adj Speed", ShowAdjSpeedMenu);
+            ExpansionKitApi.GetExpandedMenu(ExpandedMenu.UiElementsQuickMenu).AddSimpleButton("Adj Speed", ShowAdjSpeedMenu);
+
             //ExpansionKitApi.RegisterSimpleMenuButton(ExpandedMenu.AvatarMenu, "Speed Default", (() => ChangePlayerSpeed(2f)));
             //ExpansionKitApi.RegisterSimpleMenuButton(ExpandedMenu.AvatarMenu, "Speed 1/2", (() => ChangePlayerSpeed(1f)));
             //ExpansionKitApi.RegisterSimpleMenuButton(ExpandedMenu.AvatarMenu, "Speed 1/10", (() => ChangePlayerSpeed(.2f)));
@@ -32,16 +34,23 @@ namespace PlayerSpeedAdjSlower
         private void ShowAdjSpeedMenu()
         {
 
-            var adjSpeedMenu = ExpansionKitApi.CreateCustomFullMenuPopup(LayoutDescription.WideSlimList);
+            //var adjSpeedMenu = ExpansionKitApi.CreateCustomFullMenuPopup(LayoutDescription.WideSlimList);
 
-            adjSpeedMenu.AddLabel("Adjust your movement speed");
+            var adjSpeedMenu = ExpansionKitApi.CreateCustomQuickMenuPage(LayoutDescription.QuickMenu3Columns);
+
+            adjSpeedMenu.AddSimpleButton("Adjust your movement speed\n-Close-", () => adjSpeedMenu.Hide());
+            adjSpeedMenu.AddSimpleButton("Speed 10", (() => ChangePlayerSpeed(20f)));
+            adjSpeedMenu.AddSimpleButton("Speed 5", (() => ChangePlayerSpeed(10f)));
+
+
             adjSpeedMenu.AddSimpleButton("Speed 2", (() => ChangePlayerSpeed(4f)));
             adjSpeedMenu.AddSimpleButton("Speed 1.5", (() => ChangePlayerSpeed(3f)));
             adjSpeedMenu.AddSimpleButton("Speed Default", (() => ChangePlayerSpeed(2f)));
+            
             adjSpeedMenu.AddSimpleButton("Speed 1/2", (() => ChangePlayerSpeed(1f)));
             adjSpeedMenu.AddSimpleButton("Speed 1/4", (() => ChangePlayerSpeed(.5f)));
             adjSpeedMenu.AddSimpleButton("Speed 1/10", (() => ChangePlayerSpeed(.2f)));
-            adjSpeedMenu.AddSimpleButton("Close", () => adjSpeedMenu.Hide());
+            
 
             adjSpeedMenu.Show();
         }
@@ -62,8 +71,11 @@ namespace PlayerSpeedAdjSlower
         private static VRCPlayerApi _vpalocal;
         public override void OnLevelWasLoaded(int level)
         {
-            _vpalocal = null;
-            MelonModLogger.Log("vpalocal set to null - World Change");
+            if (_vpalocal != null)
+            {
+                _vpalocal = null;
+                MelonModLogger.Log("vpalocal set to null - World Change");
+            }
         }
 
         private void ChangePlayerSpeed(float value)

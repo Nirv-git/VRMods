@@ -5,12 +5,34 @@ using System;
 using System.Linq;
 using UIExpansionKit.API;
 using UnityEngine.UI;
+using System.ComponentModel;
+using IKTweaks;
+
 
 [assembly: MelonGame("VRChat", "VRChat")]
-[assembly: MelonInfo(typeof(IKTpresets.Main), "IKTpresets", "0.1.6", "Nirvash", "https://github.com/Nirv-git/VRMods")]
+[assembly: MelonInfo(typeof(IKTpresets.Main), "IKTpresets", "0.1.7", "Nirvash", "https://github.com/Nirv-git/VRMods")]
+[assembly: MelonPriority(Priority = 2)]
 
 namespace IKTpresets
 {
+
+    [Flags]
+    public enum IgnoreAnimationsModeEnum
+    {
+        [Description("Play all animations")]
+        None = 0,
+        [Description("Ignore head animations")]
+        Head = 1,
+        [Description("Ignore hands animations")]
+        Hands = 2,
+        [Description("Ignore head and hands")]
+        HandAndHead = Head | Hands,
+        [Description("Ignore others (hips/feet)")]
+        Others = 4,
+        [Description("Ignore all (always slide around)")]
+        All = HandAndHead | Others
+    }
+
     public class Main : MelonMod
     {
         public static MelonLogger.Instance Logger;
@@ -18,68 +40,58 @@ namespace IKTpresets
         internal const string IkTweaksCategory = "IkTweaks";
         private static MelonPreferences_Category category;
         public static MelonPreferences_Entry<bool> FixShoulders;
-        public static MelonPreferences_Entry<bool> CalibrateHalfFreeze;
-        public static MelonPreferences_Entry<bool> CalibrateFollowHead;
-        public static MelonPreferences_Entry<bool> CalibrateUseUniversal;
-        public static MelonPreferences_Entry<bool> CalibrateStorePerAvatar;
-        public static MelonPreferences_Entry<bool> UseKneeTrackers;
-        public static MelonPreferences_Entry<bool> UseElbowTrackers;
-        public static MelonPreferences_Entry<bool> UseChestTracker;
-        public static MelonPreferences_Entry<string> IgnoreAnimationsMode;
+        //public static MelonPreferences_Entry<bool> CalibrateHalfFreeze;
+        //public static MelonPreferences_Entry<bool> CalibrateFollowHead;
+        //public static MelonPreferences_Entry<bool> CalibrateUseUniversal;
+        //public static MelonPreferences_Entry<bool> CalibrateStorePerAvatar;
+        //public static MelonPreferences_Entry<bool> UseKneeTrackers;
+        //public static MelonPreferences_Entry<bool> UseElbowTrackers;
+        //public static MelonPreferences_Entry<bool> UseChestTracker;
+        public static MelonPreferences_Entry<IgnoreAnimationsMode> IgnoreAnimationsMode;
         public static MelonPreferences_Entry<bool> PlantFeet;
         public static MelonPreferences_Entry<bool> FullBodyVrIk;
-        public static MelonPreferences_Entry<bool> DisableFbt;
+        //public static MelonPreferences_Entry<bool> DisableFbt;
         public static MelonPreferences_Entry<float> MaxSpineAngleFwd;
         public static MelonPreferences_Entry<float> MaxSpineAngleBack;
         public static MelonPreferences_Entry<int> SpineRelaxIterations;
         public static MelonPreferences_Entry<float> MaxNeckAngleFwd;
         public static MelonPreferences_Entry<float> MaxNeckAngleBack;
         public static MelonPreferences_Entry<float> NeckPriority;
-        public static MelonPreferences_Entry<bool> AddHumanoidPass;
-        public static MelonPreferences_Entry<bool> MapToes;
+        //public static MelonPreferences_Entry<bool> AddHumanoidPass;
+        //public static MelonPreferences_Entry<bool> MapToes;
         public static MelonPreferences_Entry<bool> StraightenNeck;
         public static MelonPreferences_Entry<float> StraightSpineAngle;
         public static MelonPreferences_Entry<float> StraightSpinePower;
         public static MelonPreferences_Entry<bool> PinHipRotation;
         public static MelonPreferences_Entry<bool> DoHipShifting;
         public static MelonPreferences_Entry<bool> PreStraightenSpine;
-        public static MelonPreferences_Entry<string> MeasureMode;
-        public static MelonPreferences_Entry<bool> APoseCalibration;
+        //public static MelonPreferences_Entry<string> MeasureMode;
+        //public static MelonPreferences_Entry<bool> APoseCalibration;
         public static MelonPreferences_Entry<bool> Unrestrict3PointHeadRotation;
-        public static MelonPreferences_Entry<float> WingspanMeasurementAdjustFactor;
-        public static MelonPreferences_Entry<bool> OneHandedCalibration;
+        //public static MelonPreferences_Entry<float> WingspanMeasurementAdjustFactor;
+        //public static MelonPreferences_Entry<bool> OneHandedCalibration;
         public static MelonPreferences_Entry<bool> NoWallFreeze;
+        public static MelonPreferences_Entry<bool> DisableElbowAvoidance;
         public static MelonPreferences_Entry<Vector3> HandAngleOffset;
         public static MelonPreferences_Entry<Vector3> HandPositionOffset;
-        public static MelonPreferences_Entry<float> ElbowGoalOffset;
-        public static MelonPreferences_Entry<float> KneeGoalOffset;
-        public static MelonPreferences_Entry<float> ChestGoalOffset;
+        //public static MelonPreferences_Entry<float> ElbowGoalOffset;
+        //public static MelonPreferences_Entry<float> KneeGoalOffset;
+        //public static MelonPreferences_Entry<float> ChestGoalOffset;
 
-        public enum IgnoreAnimationsModeEnum
-        {
-            None = 0,
-            Head = 1,
-            Hands = 2,
-            HandAndHead = Head | Hands,
-            Others = 4,
-            All = HandAndHead | Others
-        }
-
-        public enum MeasureAvatarModeEnum
-        {
-            Default,
-            Height,
-            ImprovedWingspan
-        }
+        //public enum MeasureAvatarModeEnum
+        //{
+        //    Default,
+        //    Height,
+        //    ImprovedWingspan
+        //}
 
         private static Transform butt, butt2, butt3, buttKeyboard;
         private static string tempString = "";
         public static MelonPreferences_Category cat;
         public static MelonPreferences_Entry<bool> saveWithEveryChange;
-        public static MelonPreferences_Entry<string> ignoreAnimModeDefault;
+        public static MelonPreferences_Entry<IgnoreAnimationsMode> ignoreAnimModeDefault;
         public static MelonPreferences_Entry<string> savedPrefs;
         public static MelonPreferences_Entry<string> savedPrefNames;
-
 
         public override void OnApplicationStart()
         {
@@ -87,19 +99,19 @@ namespace IKTpresets
 
             cat = MelonPreferences.CreateCategory("IKTpresets", "IKTpresets");
             saveWithEveryChange = MelonPreferences.CreateEntry("IKTpresets", nameof(saveWithEveryChange), true, "MelonPreferences.Save with every edit in EditMenu");
-            ignoreAnimModeDefault = MelonPreferences.CreateEntry("IKTpresets", nameof(ignoreAnimModeDefault), nameof(IgnoreAnimationsModeEnum.None), "Animations mode to toggle between 'Ignore all (always slide around)' and. (Default is 'Play all animations')");
+            ignoreAnimModeDefault = MelonPreferences.CreateEntry("IKTpresets", nameof(ignoreAnimModeDefault), IKTweaks.IgnoreAnimationsMode.None, "Animations mode to toggle between 'Ignore all (always slide around)' and. (Default is 'Play all animations')");
             ExpansionKitApi.RegisterSettingAsStringEnum("IKTpresets",
                 nameof(ignoreAnimModeDefault),
                 new[]
                 {
-                    (nameof(IgnoreAnimationsModeEnum.None), "Play all animations"),
-                    (nameof(IgnoreAnimationsModeEnum.Head), "Ignore head animations"),
-                    (nameof(IgnoreAnimationsModeEnum.Hands), "Ignore hands animations"),
-                    (nameof(IgnoreAnimationsModeEnum.HandAndHead), "Ignore head and hands"),
+                    (nameof(IKTweaks.IgnoreAnimationsMode.None), "Play all animations"),
+                    (nameof(IKTweaks.IgnoreAnimationsMode.Head), "Ignore head animations"),
+                    (nameof(IKTweaks.IgnoreAnimationsMode.Hands), "Ignore hands animations"),
+                    (nameof(IKTweaks.IgnoreAnimationsMode.HandAndHead), "Ignore head and hands"),
                     //(nameof(IgnoreAnimationsModeEnum.All), "Ignore all (always slide around)")
                 });
-            savedPrefs = MelonPreferences.CreateEntry("IKTpresets", nameof(savedPrefs), "1,True,True,True,False,True,10,30.,30.,30.,35.,3.6,15.,2.,ImprovedWingspan,1.1,False,0.,-105.,0.,0.015,-0.005,0.,0.1,0.1,0.5;2,True,True,True,False,True,10,30.,30.,30.,15.,2.,15.,2.,ImprovedWingspan,1.1,False,0.,-105.,0.,0.015,-0.005,0.,0.1,0.1,0.5;3,True,True,True,False,True,10,30.,30.,30.,15.,2.,15.,2.,ImprovedWingspan,1.1,False,0.,-105.,0.,0.015,-0.005,0.,0.1,0.1,0.5;4,True,True,True,False,True,10,30.,30.,30.,15.,2.,15.,2.,ImprovedWingspan,1.1,False,0.,-105.,0.,0.015,-0.005,0.,0.1,0.1,0.5;5,True,True,True,False,True,10,30.,30.,30.,15.,2.,15.,2.,ImprovedWingspan,1.1,False,0.,-105.,0.,0.015,-0.005,0.,0.1,0.1,0.5;6,True,True,True,False,True,10,30.,30.,30.,15.,2.,15.,2.,ImprovedWingspan,1.1,False,0.,-105.,0.,0.015,-0.005,0.,0.1,0.1,0.5;7,True,True,True,False,True,10,30.,30.,30.,15.,2.,15.,2.,ImprovedWingspan,1.1,False,0.,-105.,0.,0.015,-0.005,0.,0.1,0.1,0.5;8,True,True,True,False,True,10,30.,30.,30.,15.,2.,15.,2.,ImprovedWingspan,1.1,False,0.,-105.,0.,0.015,-0.005,0.,0.1,0.1,0.5;9,True,True,True,False,True,10,30.,30.,30.,15.,2.,15.,2.,ImprovedWingspan,1.1,False,0.,-105.,0.,0.015,-0.005,0.,0.1,0.1,0.5;10,True,True,True,False,True,10,30.,30.,30.,15.,2.,15.,2.,ImprovedWingspan,1.1,False,0.,-105.,0.,0.015,-0.005,0.,0.1,0.1,0.5;11,True,True,True,False,True,10,30.,30.,30.,15.,2.,15.,2.,ImprovedWingspan,1.1,False,0.,-105.,0.,0.015,-0.005,0.,0.1,0.1,0.5;12,True,True,True,False,True,10,30.,30.,30.,15.,2.,15.,2.,ImprovedWingspan,1.1,False,0.,-105.,0.,0.015,-0.005,0.,0.1,0.1,0.5;13,True,True,True,False,True,10,30.,30.,30.,15.,2.,15.,2.,ImprovedWingspan,1.1,False,0.,-105.,0.,0.015,-0.005,0.,0.1,0.1,0.5;14,True,True,True,False,True,10,30.,30.,30.,15.,2.,15.,2.,ImprovedWingspan,1.1,False,0.,-105.,0.,0.015,-0.005,0.,0.1,0.1,0.5;15,True,True,True,False,True,10,30.,30.,30.,15.,2.,15.,2.,ImprovedWingspan,1.1,False,0.,-105.,0.,0.015,-0.005,0.,0.1,0.1,0.5;16,True,True,True,False,True,10,30.,30.,30.,15.,2.,15.,2.,ImprovedWingspan,1.1,False,0.,-105.,0.,0.015,-0.005,0.,0.1,0.1,0.5", "savedPrefs", "", true);
-            savedPrefNames = MelonPreferences.CreateEntry("IKTpresets", nameof(savedPrefNames), "1,N/A;2,N/A;3,N/A;4,N/A;5,N/A;6,N/A;7,N/A;8,N/A;9,N/A;10,N/A;11,N/A;12,N/A;13,N/A;14,N/A;15,N/A;16,N/A", "savedSlotNames", "", true);
+            savedPrefs = MelonPreferences.CreateEntry("IKTpresets", nameof(savedPrefs), "1,True,True,True,False,True,10,30.,30.,30.,35.,3.6,15.,2.,ImprovedWingspan,1.1,False,0.,10.,0.,0.,0.,0.,0.1,0.1,0.5,False;2,True,True,True,False,True,10,30.,30.,30.,15.,2.,15.,2.,ImprovedWingspan,1.1,False,0.,10.,0.,0.,0.,0.,0.1,0.1,0.5,False;3,True,True,True,False,True,10,30.,30.,30.,15.,2.,15.,2.,ImprovedWingspan,1.1,False,0.,10.,0.,0.,0.,0.,0.1,0.1,0.5,False;4,True,True,True,False,True,10,30.,30.,30.,15.,2.,15.,2.,ImprovedWingspan,1.1,False,0.,10.,0.,0.,0.,0.,0.1,0.1,0.5,False;5,True,True,True,False,True,10,30.,30.,30.,15.,2.,15.,2.,ImprovedWingspan,1.1,False,0.,10.,0.,0.,0.,0.,0.1,0.1,0.5,False;6,True,True,True,False,True,10,30.,30.,30.,15.,2.,15.,2.,ImprovedWingspan,1.1,False,0.,10.,0.,0.,0.,0.,0.1,0.1,0.5,False;7,True,True,True,False,True,10,30.,30.,30.,15.,2.,15.,2.,ImprovedWingspan,1.1,False,0.,10.,0.,0.,0.,0.,0.1,0.1,0.5,False;8,True,True,True,False,True,10,30.,30.,30.,15.,2.,15.,2.,ImprovedWingspan,1.1,False,0.,10.,0.,0.,0.,0.,0.1,0.1,0.5,False;9,True,True,True,False,True,10,30.,30.,30.,15.,2.,15.,2.,ImprovedWingspan,1.1,False,0.,10.,0.,0.,0.,0.,0.1,0.1,0.5,False;10,True,True,True,False,True,10,30.,30.,30.,15.,2.,15.,2.,ImprovedWingspan,1.1,False,0.,10.,0.,0.,0.,0.,0.1,0.1,0.5,False;11,True,True,True,False,True,10,30.,30.,30.,15.,2.,15.,2.,ImprovedWingspan,1.1,False,0.,10.,0.,0.,0.,0.,0.1,0.1,0.5,False;12,True,True,True,False,True,10,30.,30.,30.,15.,2.,15.,2.,ImprovedWingspan,1.1,False,0.,10.,0.,0.,0.,0.,0.1,0.1,0.5,False;13,True,True,True,False,True,10,30.,30.,30.,15.,2.,15.,2.,ImprovedWingspan,1.1,False,0.,10.,0.,0.,0.,0.,0.1,0.1,0.5,False;14,True,True,True,False,True,10,30.,30.,30.,15.,2.,15.,2.,ImprovedWingspan,1.1,False,0.,10.,0.,0.,0.,0.,0.1,0.1,0.5,False;15,True,True,True,False,True,10,30.,30.,30.,15.,2.,15.,2.,ImprovedWingspan,1.1,False,0.,10.,0.,0.,0.,0.,0.1,0.1,0.5,False;16,True,True,True,False,True,10,30.,30.,30.,15.,2.,15.,2.,ImprovedWingspan,1.1,False,0.,10.,0.,0.,0.,0.,0.1,0.1,0.5,False", "savedPrefs", "", true);
+            savedPrefNames = MelonPreferences.CreateEntry("IKTpresetsNames", nameof(savedPrefNames), "1,N/A;2,N/A;3,N/A;4,N/A;5,N/A;6,N/A;7,N/A;8,N/A;9,N/A;10,N/A;11,N/A;12,N/A;13,N/A;14,N/A;15,N/A;16,N/A", "savedSlotNames", "", true);
 
             SaveSlots.MigrateData();
 
@@ -121,23 +133,23 @@ namespace IKTpresets
             category = MelonPreferences.CreateCategory(IkTweaksCategory, "IK Tweaks");
 
             FixShoulders = category.GetEntry<bool>("PitchYawShoulders");
-            IgnoreAnimationsMode = category.GetEntry<string>(nameof(IgnoreAnimationsMode));//  nameof(IKTweaks.IgnoreAnimationsMode.HandAndHead), "Animations mode in FBT");
+            IgnoreAnimationsMode = category.GetEntry<IKTweaks.IgnoreAnimationsMode>(nameof(IgnoreAnimationsMode));//  nameof(IKTweaks.IgnoreAnimationsMode.HandAndHead), "Animations mode in FBT");
             PlantFeet = category.GetEntry<bool>(nameof(PlantFeet));//  false, "Feet stick to ground");
 
             FullBodyVrIk = category.GetEntry<bool>(nameof(FullBodyVrIk));//  true, "Enable IKTweaks (use custom VRIK)");
-            AddHumanoidPass = category.GetEntry<bool>(nameof(AddHumanoidPass));//  true, "Enforce local NetIK (see what others see)");
-            MapToes = category.GetEntry<bool>(nameof(MapToes));//  false, "Map toes (use if your feet trackers move with your toes)");
+            //AddHumanoidPass = category.GetEntry<bool>(nameof(AddHumanoidPass));//  true, "Enforce local NetIK (see what others see)");
+            //MapToes = category.GetEntry<bool>(nameof(MapToes));//  false, "Map toes (use if your feet trackers move with your toes)");
 
-            UseKneeTrackers = category.GetEntry<bool>(nameof(UseKneeTrackers));// false, "Use knee trackers");
-            UseElbowTrackers = category.GetEntry<bool>(nameof(UseElbowTrackers));//  false, "Use elbow trackers");
-            UseChestTracker = category.GetEntry<bool>(nameof(UseChestTracker));//  false, "Use chest tracker");
+            //UseKneeTrackers = category.GetEntry<bool>(nameof(UseKneeTrackers));// false, "Use knee trackers");
+            //UseElbowTrackers = category.GetEntry<bool>(nameof(UseElbowTrackers));//  false, "Use elbow trackers");
+            //UseChestTracker = category.GetEntry<bool>(nameof(UseChestTracker));//  false, "Use chest tracker");
 
-            CalibrateFollowHead = category.GetEntry<bool>(nameof(CalibrateFollowHead));//  true, "Avatar follows head when calibrating (recommended)");
-            CalibrateHalfFreeze = category.GetEntry<bool>(nameof(CalibrateHalfFreeze));//  true, "Freeze avatar on one trigger hold in follow head mode");
-            CalibrateUseUniversal = category.GetEntry<bool>(nameof(CalibrateUseUniversal));//  true, "Use universal calibration (requires follow head mode)");
+            //CalibrateFollowHead = category.GetEntry<bool>(nameof(CalibrateFollowHead));//  true, "Avatar follows head when calibrating (recommended)");
+            //CalibrateHalfFreeze = category.GetEntry<bool>(nameof(CalibrateHalfFreeze));//  true, "Freeze avatar on one trigger hold in follow head mode");
+            //CalibrateUseUniversal = category.GetEntry<bool>(nameof(CalibrateUseUniversal));//  true, "Use universal calibration (requires follow head mode)");
 
-            CalibrateStorePerAvatar = category.GetEntry<bool>(nameof(CalibrateStorePerAvatar));//  true, "Store calibration per avatar (when not using universal calibration)");
-            DisableFbt = category.GetEntry<bool>(nameof(DisableFbt));//  false, "Disable FBT even if trackers are present");
+            //CalibrateStorePerAvatar = category.GetEntry<bool>(nameof(CalibrateStorePerAvatar));//  true, "Store calibration per avatar (when not using universal calibration)");
+            //DisableFbt = category.GetEntry<bool>(nameof(DisableFbt));//  false, "Disable FBT even if trackers are present");
             PinHipRotation = category.GetEntry<bool>(nameof(PinHipRotation));//  true, "Enforce hip rotation match");
 
             DoHipShifting = category.GetEntry<bool>(nameof(DoHipShifting));//  true, "Shift hip pivot (support inverted hip)");
@@ -154,21 +166,23 @@ namespace IKTpresets
 
             StraightSpineAngle = category.GetEntry<float>(nameof(StraightSpineAngle));//  15f, "Straight spine angle (degrees)");
             StraightSpinePower = category.GetEntry<float>(nameof(StraightSpinePower));//  2f, "Straight spine power");
-            MeasureMode = category.GetEntry<string>(nameof(MeasureMode));//  nameof(MeasureAvatarMode.ImprovedWingspan), "Avatar scaling mode");
+            //MeasureMode = category.GetEntry<string>(nameof(MeasureMode));//  nameof(MeasureAvatarMode.ImprovedWingspan), "Avatar scaling mode");
 
-            APoseCalibration = category.GetEntry<bool>(nameof(APoseCalibration));//  false, "A-pose calibration");
+            //APoseCalibration = category.GetEntry<bool>(nameof(APoseCalibration));//  false, "A-pose calibration");
             Unrestrict3PointHeadRotation = category.GetEntry<bool>(nameof(Unrestrict3PointHeadRotation));//  true, "Allow more head rotation in 3/4-point tracking");
-            WingspanMeasurementAdjustFactor = category.GetEntry<float>(nameof(WingspanMeasurementAdjustFactor));//  1.1f, "Improved wingspan adjustment factor");
+            //WingspanMeasurementAdjustFactor = category.GetEntry<float>(nameof(WingspanMeasurementAdjustFactor));//  1.1f, "Improved wingspan adjustment factor");
 
-            OneHandedCalibration = category.GetEntry<bool>(nameof(OneHandedCalibration));//  false, "One-handed calibration");
+            //OneHandedCalibration = category.GetEntry<bool>(nameof(OneHandedCalibration));//  false, "One-handed calibration");
             NoWallFreeze = category.GetEntry<bool>(nameof(NoWallFreeze));//  true, "Don't freeze head/hands inside walls");
 
-            HandAngleOffset = category.GetEntry<Vector3>(nameof(HandAngleOffset));//  DefaultHandAngle, "Hand angle offset", null, true);
-            HandPositionOffset = category.GetEntry<Vector3>(nameof(HandPositionOffset));//  DefaultHandOffset, "Hand position offset", null, true);
+            DisableElbowAvoidance = category.GetEntry<bool>(nameof(DisableElbowAvoidance));//, false, "Disable IK2 elbow-chest avoidance") ;
 
-            ElbowGoalOffset = category.GetEntry<float>(nameof(ElbowGoalOffset));//, 0.1f, "Elbows bend goal offset (0-1)");
-            KneeGoalOffset = category.GetEntry<float>(nameof(KneeGoalOffset));//, 0.1f, "Knees bend goal offset (0-1)");
-            ChestGoalOffset = category.GetEntry<float>(nameof(ChestGoalOffset));//, 0.5f, "Chest bend goal offset (0-1)");
+            HandAngleOffset = category.GetEntry<Vector3>(nameof(HandAngleOffset) + "2");//  DefaultHandAngle, "Hand angle offset", null, true);
+            HandPositionOffset = category.GetEntry<Vector3>(nameof(HandPositionOffset) + "2");//  DefaultHandOffset, "Hand position offset", null, true);
+
+            //ElbowGoalOffset = category.GetEntry<float>(nameof(ElbowGoalOffset));//, 0.1f, "Elbows bend goal offset (0-1)");
+            //KneeGoalOffset = category.GetEntry<float>(nameof(KneeGoalOffset));//, 0.1f, "Knees bend goal offset (0-1)");
+            //ChestGoalOffset = category.GetEntry<float>(nameof(ChestGoalOffset));//, 0.5f, "Chest bend goal offset (0-1)");
         }
 
         public void PresetsMain()
@@ -186,23 +200,27 @@ namespace IKTpresets
             }));
             menu.AddToggleButton("IKT Animations Disabled", (action) =>
             {
-                IgnoreAnimationsMode.Value = GetIgnoreAnimValue() ? ignoreAnimModeDefault.Value : "All";
+                IgnoreAnimationsMode.Value = GetIgnoreAnimValue() ? ignoreAnimModeDefault.Value : IKTweaks.IgnoreAnimationsMode.All;
                 MelonPreferences.Save();
             }, () => GetIgnoreAnimValue() );
-
+            
             bool GetIgnoreAnimValue()
             {
                 switch (IgnoreAnimationsMode.Value)
                 {
-                    case "All": return true; 
-                    case "None": return false; 
+                    case IKTweaks.IgnoreAnimationsMode.All: return true; 
+                    case IKTweaks.IgnoreAnimationsMode.None: return false; 
                     default: return false;
                 }
             }
-            menu.AddSpacer();
+            menu.AddToggleButton("Use IKT spine solver", (action) =>
+            {
+                FullBodyVrIk.Value = action;
+                MelonPreferences.Save();
+            }, () => FullBodyVrIk.Value);
 
             var slotNames = SaveSlots.GetSavedSlotNames();
-            foreach (System.Collections.Generic.KeyValuePair<int, System.Tuple<System.Tuple<bool, bool, bool, bool, bool>, System.Tuple<int, float, float, float, float, float, float>, System.Tuple<float, string, float, bool, Vector3, Vector3>, System.Tuple<float, float, float>>>
+            foreach (System.Collections.Generic.KeyValuePair<int, System.Tuple<System.Tuple<bool, bool, bool, bool, bool>, System.Tuple<int, float, float, float, float, float, float>, System.Tuple<float, string, float, bool, Vector3, Vector3>, System.Tuple<float, float, float, bool>>>
                 slot in SaveSlots.GetSaved())
             {
                 //Logger.Msg($"{slot.Key}");
@@ -626,180 +644,28 @@ namespace IKTpresets
                 menu2.Show();
             });
 
-            menu.AddSimpleButton($"Avatar scaling mode:\n{MeasureMode.Value}", () =>
-            {
-                string label()
-                {
-                    return $"Avatar scaling mode: {MeasureMode.Value}\n--Must recalibrate--";
-                }
-                var menu2 = ExpansionKitApi.CreateCustomQuickMenuPage(LayoutDescriptionCustom.QuickMenu1ColumnWideSlim);
-                menu2.AddLabel(label(), (button) => butt = button.transform);
-                menu2.AddSimpleButton($"Default", () =>
-                {
-                    MeasureMode.Value = "Default";
-                    if (saveWithEveryChange.Value) MelonPreferences.Save();
-                    butt.GetComponentInChildren<Text>().text = label();
-                });
-                menu2.AddSimpleButton($"Height", () =>
-                {
-                    MeasureMode.Value = "Height";
-                    if (saveWithEveryChange.Value) MelonPreferences.Save();
-                    butt.GetComponentInChildren<Text>().text = label();
-                });
-                menu2.AddSimpleButton($"ImprovedWingspan", () =>
-                {
-                    MeasureMode.Value = "ImprovedWingspan";
-                    if (saveWithEveryChange.Value) MelonPreferences.Save();
-                    butt.GetComponentInChildren<Text>().text = label();
-                });
-                menu2.AddSimpleButton($"<-Back", () =>
-                {
-                    EditMenu();
-                });
-                menu2.Show();
-            });
-
-            menu.AddSimpleButton($"ImprovedWingspan adjustment factor:\n{WingspanMeasurementAdjustFactor.Value}", () =>
-            {
-                string label()
-                {
-                    return $"Improved wingspan adjustment factor: {WingspanMeasurementAdjustFactor.Value}\n--Must recalibrate--";
-                }
-                var menu2 = ExpansionKitApi.CreateCustomQuickMenuPage(LayoutDescriptionCustom.QuickMenu1ColumnWideSlim);
-                menu2.AddLabel(label(), (button) => butt = button.transform);
-                menu2.AddSimpleButton($"++", () =>
-                {
-                    WingspanMeasurementAdjustFactor.Value += .1f;
-                    if (saveWithEveryChange.Value) MelonPreferences.Save();
-                    butt.GetComponentInChildren<Text>().text = label();
-                });
-                menu2.AddSimpleButton($"+", () =>
-                {
-                    WingspanMeasurementAdjustFactor.Value += .01f;
-                    if (saveWithEveryChange.Value) MelonPreferences.Save();
-                    butt.GetComponentInChildren<Text>().text = label();
-                });
-                menu2.AddSimpleButton($"1.1", () =>
-                {
-                    WingspanMeasurementAdjustFactor.Value = 1.1f;
-                    if (saveWithEveryChange.Value) MelonPreferences.Save();
-                    butt.GetComponentInChildren<Text>().text = label();
-                });
-                menu2.AddSimpleButton($"-", () =>
-                {
-                    WingspanMeasurementAdjustFactor.Value -= .01f;
-                    if (saveWithEveryChange.Value) MelonPreferences.Save();
-                    butt.GetComponentInChildren<Text>().text = label();
-                });
-                menu2.AddSimpleButton($"--", () =>
-                {
-                    WingspanMeasurementAdjustFactor.Value -= .1f;
-                    if (saveWithEveryChange.Value) MelonPreferences.Save();
-                    butt.GetComponentInChildren<Text>().text = label();
-                });
-                menu2.AddSimpleButton($"<-Back", () =>
-                {
-                    EditMenu();
-                });
-                menu2.Show();
-            });
-
             menu.AddToggleButton("Feet stick to ground", (action) =>
             {
                 PlantFeet.Value = !PlantFeet.Value;
                 if (saveWithEveryChange.Value) MelonPreferences.Save();
             }, () => PlantFeet.Value);
 
+            menu.AddToggleButton("Disable IK2 elbow-chest avoidance", (action) =>
+            {
+                DisableElbowAvoidance.Value = !DisableElbowAvoidance.Value;
+                if (saveWithEveryChange.Value) MelonPreferences.Save();
+            }, () => DisableElbowAvoidance.Value);
+
+            menu.AddSpacer();
+            
             menu.AddSimpleButton($"<-Back", () =>
             {
                 PresetsMain();
             });
 
-            menu.AddSimpleButton($"Elbow/Knee/Chest GoalOffset\n{ElbowGoalOffset.Value} {KneeGoalOffset.Value} {ChestGoalOffset.Value}", () =>
-            {
-                string label()
-                {
-                    return $"Elbow GoalOffset\n{ElbowGoalOffset.Value}";
-                }
-                string label2()
-                {
-                    return $"Knee GoalOffset\n{KneeGoalOffset.Value}";
-                }
-                string label3()
-                {
-                    return $"Chest GoalOffset\n{ChestGoalOffset.Value}";
-                }
-                var menu2 = ExpansionKitApi.CreateCustomQuickMenuPage(LayoutDescription.QuickMenu4Columns);
-                menu2.AddLabel(label(), (button) => butt = button.transform);
-                menu2.AddSimpleButton($"-", () =>
-                {
-                    ElbowGoalOffset.Value -= .05f;
-                    if (saveWithEveryChange.Value) MelonPreferences.Save();
-                    butt.GetComponentInChildren<Text>().text = label();
-                });
-                menu2.AddSimpleButton($"0.1", () =>
-                {
-                    ElbowGoalOffset.Value = 0.1f;
-                    if (saveWithEveryChange.Value) MelonPreferences.Save();
-                    butt.GetComponentInChildren<Text>().text = label();
-                });
-                menu2.AddSimpleButton($"+", () =>
-                {
-                    ElbowGoalOffset.Value += .05f;
-                    if (saveWithEveryChange.Value) MelonPreferences.Save();
-                    butt.GetComponentInChildren<Text>().text = label();
-                });
-                //
-                menu2.AddLabel(label2(), (button) => butt2 = button.transform);
-                menu2.AddSimpleButton($"-", () =>
-                {
-                    KneeGoalOffset.Value -= .05f;
-                    if (saveWithEveryChange.Value) MelonPreferences.Save();
-                    butt2.GetComponentInChildren<Text>().text = label2();
-                });
-                menu2.AddSimpleButton($"0.1", () =>
-                {
-                    KneeGoalOffset.Value = 0.1f;
-                    if (saveWithEveryChange.Value) MelonPreferences.Save();
-                    butt2.GetComponentInChildren<Text>().text = label2();
-                });
-                menu2.AddSimpleButton($"+", () =>
-                {
-                    KneeGoalOffset.Value += .05f;
-                    if (saveWithEveryChange.Value) MelonPreferences.Save();
-                    butt2.GetComponentInChildren<Text>().text = label2();
-                });
-                //
-                menu2.AddLabel(label3(), (button) => butt3 = button.transform);
-                menu2.AddSimpleButton($"-", () =>
-                {
-                    ChestGoalOffset.Value -= .05f;
-                    if (saveWithEveryChange.Value) MelonPreferences.Save();
-                    butt3.GetComponentInChildren<Text>().text = label3();
-                });
-                menu2.AddSimpleButton($"0.5", () =>
-                {
-                    ChestGoalOffset.Value = 0.5f;
-                    if (saveWithEveryChange.Value) MelonPreferences.Save();
-                    butt3.GetComponentInChildren<Text>().text = label3();
-                });
-                menu2.AddSimpleButton($"+", () =>
-                {
-                    ChestGoalOffset.Value += .05f;
-                    if (saveWithEveryChange.Value) MelonPreferences.Save();
-                    butt3.GetComponentInChildren<Text>().text = label3();
-                });
-                //
-                menu2.AddSimpleButton($"<-Back", () =>
-                {
-                    EditMenu();
-                });
-                menu2.AddLabel("Sensible range of values is between 0 and 1.");
-
-                menu2.Show();
-            });
-
             menu.AddSpacer();
+            menu.AddSpacer();
+
             menu.AddSimpleButton($"Help Docs", () =>
             {
                 HelpDocs();
@@ -823,15 +689,16 @@ namespace IKTpresets
             menu.AddLabel("* Neck bend priority - neck will bend this much faster than the spine. This is intended to handle the fact that people move their neck way more than their spine, so IK should start off by bending it, not spine.");
             menu.AddLabel("* Straight spine angle - withing this angle from perfectly straight, the spine will be considered almost straight and maximum bend angles will be reduced.");
             menu.AddLabel("* Straight spine power - controls the curve with which the spine transitions from straight to bend within the straight angle. Recommended values are between 1 and 2.");
-            menu.AddLabel("* Avatar scaling mode - controls how your avatar scale is computed. 'Height' scales the avatar so that your real floor alights with the virtual one (at the cost of you likely getting t-rex arms), 'Improved wingspan' attempts to measure avatar arm span more accurately than VRC default.");
-            menu.AddLabel("* Improved wingspan adjustment factor - your wingspan is adjusted by this factor in 'Improved wingspan' scaling mode. If you consistently get avatar arms too long/short, consider tweaking this a tiny bit (to like 1.05 or 1.15)");
+            //menu.AddLabel("* Avatar scaling mode - controls how your avatar scale is computed. 'Height' scales the avatar so that your real floor alights with the virtual one (at the cost of you likely getting t-rex arms), 'Improved wingspan' attempts to measure avatar arm span more accurately than VRC default.");
+            //menu.AddLabel("* Improved wingspan adjustment factor - your wingspan is adjusted by this factor in 'Improved wingspan' scaling mode. If you consistently get avatar arms too long/short, consider tweaking this a tiny bit (to like 1.05 or 1.15)");
             menu.AddLabel("* Feet stick to ground - uncheck if you want your feet (and the rest of your avatar) to be unable to leave the ground, like in ol' good times");
+            menu.AddLabel("* Disable IK2 elbow-chest avoidance - brings behavior of elbows closer to old 3-point IK, solving some issues with elbows spazzing out in some poses.");
             menu.AddLabel("* Hand angles/offsets (found in VRChat Settings menu -> left blue panel -> More IKTweaks -> Adjust hand angles/offsets) - you can configure how avatar hands are positioned relative to controllers. Defaults were tuned for Index controllers, but should be applicable to most other controllers too.");
-            menu.AddLabel("* Elbow/knee/chest bend goal offset - controls how far bend goal targets will be away from the actual joint. Lower values should produce better precision with bent joint, higher values - better stability with straight joint. Sensible range of values is between 0 and 1.");
+            //menu.AddLabel("* Elbow/knee/chest bend goal offset - controls how far bend goal targets will be away from the actual joint. Lower values should produce better precision with bent joint, higher values - better stability with straight joint. Sensible range of values is between 0 and 1.");
 
             menu.AddSimpleButton($"Open Full ReadMe on Github", () =>
             {
-                Application.OpenURL("https://github.com/knah/VRCMods#iktweaks");
+                Application.OpenURL("https://github.com/knah/VRCMods#brief-settings-description");
             });
             menu.AddSimpleButton($"<-Back", () =>
             {
@@ -863,7 +730,7 @@ namespace IKTpresets
             storedMenu.AddSpacer();
             storedMenu.AddSpacer();
 
-            foreach (System.Collections.Generic.KeyValuePair<int, System.Tuple < System.Tuple<bool, bool, bool, bool, bool>, System.Tuple<int, float, float, float, float, float, float>, System.Tuple<float, string, float, bool, Vector3, Vector3>, System.Tuple<float, float, float>>>
+            foreach (System.Collections.Generic.KeyValuePair<int, System.Tuple < System.Tuple<bool, bool, bool, bool, bool>, System.Tuple<int, float, float, float, float, float, float>, System.Tuple<float, string, float, bool, Vector3, Vector3>, System.Tuple<float, float, float, bool>>>
                 slot in SaveSlots.GetSaved())
             {
                 string label =  $"Slot: {slot.Key}\n{slotNames[slot.Key]}";

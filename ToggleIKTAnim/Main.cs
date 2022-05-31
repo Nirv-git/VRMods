@@ -1,8 +1,12 @@
 ﻿using MelonLoader;
 using UIExpansionKit.API;
+using System;
+using System.ComponentModel;
+using IKTweaks;
 
-[assembly: MelonInfo(typeof(ToggleIKTAnim.Main), "ToggleIKTAnim", "0.0.0.1", "Nirvash")]
+[assembly: MelonInfo(typeof(ToggleIKTAnim.Main), "ToggleIKTAnim", "0.0.0.2", "Nirvash")]
 [assembly: MelonGame("VRChat", "VRChat")]
+[assembly: MelonPriority(Priority = 2)]
 
 namespace ToggleIKTAnim
 {
@@ -10,13 +14,14 @@ namespace ToggleIKTAnim
     {
         private static bool animDisabled;
 
+        
         public override void OnApplicationStart()
         {
 
-            switch (MelonPreferences.GetEntryValue<string>("IkTweaks", "IgnoreAnimationsMode"))
+            switch (MelonPreferences.GetEntryValue<IKTweaks.IgnoreAnimationsMode>("IkTweaks", "IgnoreAnimationsMode"))
             {
-                case "All": Main.animDisabled = true; break;
-                case "None": Main.animDisabled = false; break;
+                case IKTweaks.IgnoreAnimationsMode.All: Main.animDisabled = true; break;
+                case IKTweaks.IgnoreAnimationsMode.None: Main.animDisabled = false; break;
                 default: Main.animDisabled = false; break;
             }
 
@@ -24,12 +29,12 @@ namespace ToggleIKTAnim
             {
                 if (Main.animDisabled)//Currently disabled, undisable
                 {
-                    MelonPreferences.SetEntryValue<string>("IkTweaks", "IgnoreAnimationsMode", "None");
+                    MelonPreferences.SetEntryValue<IKTweaks.IgnoreAnimationsMode>("IkTweaks", "IgnoreAnimationsMode", IKTweaks.IgnoreAnimationsMode.None);
                     Main.animDisabled = !Main.animDisabled;
                 }
                 else //Currently enabled, disable
                 {
-                    MelonPreferences.SetEntryValue<string>("IkTweaks", "IgnoreAnimationsMode", "All");
+                    MelonPreferences.SetEntryValue<IKTweaks.IgnoreAnimationsMode>("IkTweaks", "IgnoreAnimationsMode", IKTweaks.IgnoreAnimationsMode.All);
                     Main.animDisabled = !Main.animDisabled;
                 }
                 MelonPreferences.Save();
@@ -37,3 +42,4 @@ namespace ToggleIKTAnim
         }
     }
 }
+
