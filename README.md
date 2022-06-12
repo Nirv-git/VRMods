@@ -4,10 +4,7 @@
 **This was made in my free time, and is provided AS IS without warranty of any kind, express or implied. Any use is at your own risk and you accept all responsibility**
 
 # Mods not currently published on VRCMG:
-* IKTpresets
-* LocalLightMod
 * DisableOneHandMovementUI
-* DisableControllerOverlay
 * DisableQMSafeMode
 * LocalCube
 * MirrorLayers
@@ -184,6 +181,12 @@ Due to how AMAPI handles radials I made it so at 97% the puppets are maxed out.
 Location position options:  
 ![image](https://user-images.githubusercontent.com/81605232/155648561-c21c7eef-6c5b-4f4e-8a36-e651f0c2f62c.png)
 
+# PhysBoneAdjust
+This adds a menu for locally adjusting physbone parameters in game.   
+This was made just for 'I want to tune this very specifically and wiggling it in Unity isnt enough'   
+Menu is accessable from the Settings QuickMenu UIX menu.  
+        
+![image](https://user-images.githubusercontent.com/81605232/173246169-bea4c3b9-8c09-4b28-b09b-621b796e3ff8.png) 
 
 # PlayerSpeedAdjSlower
 Did you ever want to move slower in game? This mod lets you do that! This is a very simple mod that uses [UIExpansionKit](https://github.com/knah/VRCMods/) to add three buttons to your settings menu. Default Speed, Half speed and 1/10 speed. 
