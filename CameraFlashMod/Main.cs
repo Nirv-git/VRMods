@@ -5,7 +5,7 @@ using System;
 using UnityEngine.UI;
 using System.Collections;
 
-[assembly: MelonInfo(typeof(CameraFlashMod.Main), "CameraFlashMod", "1.0", "Nirvash")]
+[assembly: MelonInfo(typeof(CameraFlashMod.Main), "CameraFlashMod", "1.1.1", "Nirvash")]
 [assembly: MelonGame("VRChat", "VRChat")]
 [assembly: MelonColor(ConsoleColor.Green)]
 
@@ -61,8 +61,8 @@ namespace CameraFlashMod
                 case LightType.Spot: break;
                 default: MelonLogger.Msg("Can not use selected LightType, defaulting to Spot"); lightType.Value = LightType.Spot; break;
             }
-            UIX.UIXButt.SetActive(UIXbuttEn.Value);
-            uiButton.SetActive(buttEn.Value);
+            if(UIX.UIXButt != null) UIX.UIXButt.SetActive(UIXbuttEn.Value);
+            if(uiButton != null) uiButton.SetActive(buttEn.Value);
         }
 
         public static IEnumerator OnLoad()
