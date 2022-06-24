@@ -7,7 +7,7 @@ using VRC.Core;
 using UIExpansionKit.API;
 using VRChatUtilityKit.Utilities;
 
-[assembly: MelonModInfo(typeof(HideCameraIndicators.HideCameraIndicatorsMod), "HideCameraIndicatorsMod", "0.3", "Nirvash")]
+[assembly: MelonModInfo(typeof(HideCameraIndicators.HideCameraIndicatorsMod), "HideCameraIndicatorsMod", "0.3.1", "Nirvash")]
 [assembly: MelonModGame("VRChat", "VRChat")]
 [assembly: MelonColor(ConsoleColor.Yellow)]
 
@@ -66,7 +66,7 @@ namespace HideCameraIndicators
 
         public override void OnPreferencesSaved()
         {
-            UIXButt.SetActive(noUIXButt.Value);
+            if(UIXButt != null) UIXButt.SetActive(noUIXButt.Value);
         }
 
         public static void OnAvatarInstantiated(VRCAvatarManager player, ApiAvatar avatar, GameObject gameObject)
