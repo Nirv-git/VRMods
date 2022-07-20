@@ -57,7 +57,7 @@ namespace ImmobilizePlayer
             }
 
             // Check if whitelisted from EmmVRC - thanks Emilia and the rest of EmmVRC Staff
-            var uwr = UnityWebRequest.Get($"https://dl.emmvrc.com/riskyfuncs.php?worldid={worldId}");
+            var uwr = UnityWebRequest.Get($"https://prod-dl.emmvrc.com/risky_func/{worldId}");
             uwr.SendWebRequest();
             while (!uwr.isDone)
                 yield return new WaitForEndOfFrame();
