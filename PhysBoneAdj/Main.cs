@@ -9,7 +9,7 @@ using VRC.SDK3.Dynamics.PhysBone.Components;
 
 
 [assembly: MelonGame("VRChat", "VRChat")]
-[assembly: MelonInfo(typeof(PhysBoneAdj.Main), "PhysBoneAdjMod", "0.1", "Nirvash", "https://github.com/Nirv-git/VRMods")]
+[assembly: MelonInfo(typeof(PhysBoneAdj.Main), "PhysBoneAdjMod", "0.2", "Nirvash", "https://github.com/Nirv-git/VRMods")]
 
 namespace PhysBoneAdj
 {
@@ -51,6 +51,15 @@ namespace PhysBoneAdj
                     LocalBonesMenu();
             }); 
         }
+        private Transform GetBoneTransform(VRCPhysBone bone)
+        {
+            if (!bone?.rootTransform?.Equals(null) ?? false)
+                return bone.rootTransform;
+            else if (!bone?.transform?.Equals(null) ?? false)
+                return bone.transform;
+            return null;
+        }
+
 
         private void LocalBonesMenu()
         {
@@ -61,9 +70,10 @@ namespace PhysBoneAdj
             var localBones = VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.root.GetComponentsInChildren<VRC.SDK3.Dynamics.PhysBone.Components.VRCPhysBone>();
             foreach (var bone in localBones)
             {
-                if (!bone?.rootTransform?.Equals(null) ?? false)
+                var boneTransform = GetBoneTransform(bone);
+                if (boneTransform != null)
                 {
-                    Menu.AddSimpleButton($"{bone.rootTransform.name}", (() =>
+                    Menu.AddSimpleButton($"{boneTransform.name}", (() =>
                     {
                     SingleBoneMenu(bone);
                     lastBone = bone;
@@ -77,7 +87,8 @@ namespace PhysBoneAdj
         {
             var Menu = ExpansionKitApi.CreateCustomQuickMenuPage(LayoutDescriptionCustom.QuickMenu4Column5Row);
 
-            Menu.AddLabel($"Bone-{bone.rootTransform.name}");
+            var boneTransform = GetBoneTransform(bone);
+            Menu.AddLabel($"Bone-{boneTransform.name}");
             Menu.AddToggleButton("isAnimated", (action) =>
             {
                 bone.isAnimated = action;
@@ -141,8 +152,9 @@ namespace PhysBoneAdj
 
         private void SingleBoneForcesMenu(VRCPhysBone bone)
         {
+            var boneTransform = GetBoneTransform(bone);
             var Menu = ExpansionKitApi.CreateCustomQuickMenuPage(LayoutDescriptionCustom.QuickMenu4ColumnSlim);
-            Menu.AddLabel($"Bone-{bone.rootTransform.name}");
+            Menu.AddLabel($"Bone-{boneTransform.name}");
             Menu.AddSpacer();
             multiButt = Menu.AddSimpleButton($"Multiplier\n{multi}", () => ChangeMulti());
             Menu.AddSimpleButton("Back", () => SingleBoneMenu(bone));
@@ -285,8 +297,9 @@ namespace PhysBoneAdj
 
         private void SingleBoneLimitsMenu(VRCPhysBone bone)
         {
+            var boneTransform = GetBoneTransform(bone);
             var Menu = ExpansionKitApi.CreateCustomQuickMenuPage(LayoutDescriptionCustom.QuickMenu3ColumnSlim);
-            Menu.AddLabel($"Bone-{bone.rootTransform.name}");
+            Menu.AddLabel($"Bone-{boneTransform.name}");
             Menu.AddLabel($"Rotaion\nX:{bone.limitRotation.x}\nY:{bone.limitRotation.y}\nZ:{bone.limitRotation.z}");
             Menu.AddSimpleButton("Back", () => SingleBoneMenu(bone));
             ///////
@@ -399,8 +412,9 @@ namespace PhysBoneAdj
         }
         private void SingleBoneGrabMoveMenu(VRCPhysBone bone)
         {
+            var boneTransform = GetBoneTransform(bone);
             var Menu = ExpansionKitApi.CreateCustomQuickMenuPage(LayoutDescriptionCustom.QuickMenu3ColumnSlim);
-            Menu.AddLabel($"Bone-{bone.rootTransform.name}");
+            Menu.AddLabel($"Bone-{boneTransform.name}");
             multiButt = Menu.AddSimpleButton($"Multiplier\n{multi}", () => ChangeMulti());
             Menu.AddSimpleButton("Back", () => SingleBoneMenu(bone));
             ///////
@@ -489,8 +503,9 @@ namespace PhysBoneAdj
 
         private void CurveMenu(VRCPhysBone bone, string type, string menu)
         {
+            var boneTransform = GetBoneTransform(bone);
             var Menu = ExpansionKitApi.CreateCustomQuickMenuPage(LayoutDescriptionCustom.QuickMenu3ColumnSlimmer);
-            Menu.AddLabel(type + " - " + bone.rootTransform.name);
+            Menu.AddLabel(type + " - " + boneTransform.name);
             Menu.AddSimpleButton("Create/Edit Curve(Beta)", () =>
             {
                 NewCurveMenu(bone, type, menu);
@@ -538,8 +553,9 @@ namespace PhysBoneAdj
 
         private void NewCurveMenu(VRCPhysBone bone, string type, string menu)
         {
+            var boneTransform = GetBoneTransform(bone);
             var Menu = ExpansionKitApi.CreateCustomQuickMenuPage(LayoutDescriptionCustom.QuickMenu3ColumnSlimmer);
-            Menu.AddLabel(type + " - " + bone.rootTransform.name);
+            Menu.AddLabel(type + " - " + boneTransform.name);
             Menu.AddSimpleButton("Apply Curve to Bone", () =>
             {
                 var ConfirmMenu = ExpansionKitApi.CreateCustomQuickMenuPage(LayoutDescriptionCustom.QuickMenu1Column);
